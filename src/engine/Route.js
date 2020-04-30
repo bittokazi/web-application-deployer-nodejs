@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import Routes from "./../routes/Routes";
 import Oauth from "./oauth/Oauth";
+import serveStatic from "serve-static";
 
 export const Route = (app, socketIoCallback) => {
   app.use(morgan("dev"));
