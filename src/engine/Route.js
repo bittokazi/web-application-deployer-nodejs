@@ -30,6 +30,12 @@ export const Route = (app, socketIoCallback) => {
 
   Routes(app, socketIoCallback);
 
+  app.use(serveStatic(__dirname + "/../../spaBuild"));
+
+  app.get("/*", (req, res) => {
+    res.sendFile(path.resolve(__dirname + "/../../spaBuild/index.html"));
+  });
+
   app.use((req, res, next) => {
     const error = new Error("Not found");
     error.status = 404;
