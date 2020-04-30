@@ -7,7 +7,7 @@ cd frontend
 npm install
 npm run build:stage
 cp -r build ../spaBuild
-cd ../
+cd ../../
 cp .env web-application-deployer-nodejs/.env
 cd web-application-deployer-nodejs
 pm2 restart npm --name "nodejs-web-app-deployer" -- serve --no-autorestart
