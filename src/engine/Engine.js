@@ -25,7 +25,7 @@ export default class Engine {
             });
             this.app.listen(this.config._PORT, () =>
               console.log(
-                `Deployment server running on port ${this.config._PORT}!`
+                `Deployment + server running on port ${this.config._PORT}!`
               )
             );
           })
