@@ -4,6 +4,7 @@ import express from "express";
 import Routes from "./../routes/Routes";
 import Oauth from "./oauth/Oauth";
 import serveStatic from "serve-static";
+import path from "path";
 
 export const Route = (app, socketIoCallback) => {
   app.use(morgan("dev"));
