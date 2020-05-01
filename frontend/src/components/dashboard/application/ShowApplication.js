@@ -68,7 +68,6 @@ export default class ShowApplication extends Component {
             <div class="col-md-12">
               <div class="white-box">
                 <button onClick={() => this.deploy()}>Deploy</button>
-                {/* <div class="table-responsive"> */}
                 <div
                   class="row"
                   id="messageList"
@@ -82,7 +81,6 @@ export default class ShowApplication extends Component {
                   {this.state.messages.map((message) => {
                     return <div class="col-md-12">{message.message}</div>;
                   })}
-                  {/* </div> */}
                 </div>
               </div>
             </div>

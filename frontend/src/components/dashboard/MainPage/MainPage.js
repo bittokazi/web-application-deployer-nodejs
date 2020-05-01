@@ -4,10 +4,17 @@ import DashboardBreadcrumb from "./.././../../layouts/DashboardBreadcrumb";
 import { UserInfoContext } from "./../../../providers/UserInfoProvider";
 import { ApiCall } from "../../../services/NetworkLayer";
 
+let $ = window["$"];
+
 export default class MainPage extends Component {
+  static contextType = UserInfoContext;
+
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      application: [],
+      messages: [],
+    };
   }
 
   deploy = () => {
@@ -24,7 +31,25 @@ export default class MainPage extends Component {
     alert("Self Deployed... now wait and pray :s");
   };
 
-  authSuccess(user) {}
+  authSuccess(user) {
+    this.context.chat.setOnMessageReceive(this.onNewMessageReceived);
+  }
+
+  componentWillUnmount() {
+    this.context.chat.setOnMessageReceive(null);
+  }
+
+  onNewMessageReceived = (message) => {
+    console.log(message);
+
+    this.setState({
+      messages: [...this.state.messages, message],
+    });
+    $("#messageList").animate(
+      { scrollTop: $("#messageList").prop("scrollHeight") },
+      1
+    );
+  };
 
   render() {
     return (
@@ -40,10 +65,25 @@ export default class MainPage extends Component {
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <div class="white-box"></div>
-                  <button onClick={() => this.deploy()}>
-                    XXXXSelf DeployXXXX
-                  </button>
+                  <div class="white-box">
+                    <button onClick={() => this.deploy()}>
+                      Self Update and Deploy
+                    </button>
+                    <div
+                      class="row"
+                      id="messageList"
+                      style={{
+                        background: "black",
+                        color: "white",
+                        height: "600px",
+                        "overflow-y": "scroll",
+                      }}
+                    >
+                      {this.state.messages.map((message) => {
+                        return <div class="col-md-12">{message.message}</div>;
+                      })}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

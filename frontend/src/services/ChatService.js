@@ -25,7 +25,7 @@ export default class ChatService {
           self.connected = true;
           self.listenToMessage();
           // self.listenToUserSpace();
-          // self.listentToDisconnect();
+          self.listentToDisconnect();
           // self.listenToOnUserStatus();
           // self.getRooms(true).then((rooms) => {
           //   if (callback) callback(rooms);
@@ -45,7 +45,7 @@ export default class ChatService {
 
   listentToDisconnect() {
     this.socket.on("disconnect", () => {
-      this.onDisconnect();
+      if (this.onDisconnect != null) this.onDisconnect();
       this.disconnect();
       this.connect(null, this.token);
     });
@@ -60,7 +60,7 @@ export default class ChatService {
 
   listenToMessage() {
     this.socket.on("chat.message.deploy", (message) => {
-      this.onMessageReceive(message);
+      if (this.onMessageReceive != null) this.onMessageReceive(message);
     });
   }
 
