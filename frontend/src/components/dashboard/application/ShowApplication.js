@@ -60,7 +60,7 @@ export default class ShowApplication extends Component {
         <div class="container-fluid">
           <div class="row bg-title">
             <div class="col-lg-12">
-              <h4 class="page-title">Application List</h4>
+              <h4 class="page-title">Deploy Application</h4>
               <DashboardBreadcrumb />
             </div>
           </div>
