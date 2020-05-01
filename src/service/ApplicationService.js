@@ -283,7 +283,7 @@ export const selfDeployerService = (req, success, error) => {
       __dirname +
       "/../../scripts/self_deploy.js " +
       __dirname +
-      "/../../../self_deploy.js && cd ../ && pm2 start self_deploy.js"
+      "/../../../self_deploy.js && cd ../ && node self_deploy.js"
   );
   bash.on("exit", function (data) {
     console.log("exit", data.toString());
