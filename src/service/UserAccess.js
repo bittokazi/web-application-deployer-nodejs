@@ -9,14 +9,31 @@ export const UserAccess = (role, req) => {
 
     menu = {
       path: `/dashboard`,
-      title: `Home`,
+      title: `Dashboard`,
       sub: [
         {
           path: `/dashboard`,
-          title: `Home`,
-          show: true,
+          title: `Dashboard`,
+          show: false,
           breadcrumb: true,
           icon: `glyphicon glyphicon-fire`,
+        },
+        {
+          path: `/dashboard/applications`,
+          title: `Applications`,
+          sub: [
+            ...applicationPaths,
+            {
+              path: `/dashboard/applications/deploy/:id`,
+              title: `Deploy Application`,
+              show: false,
+              breadcrumb: true,
+              icon: `glyphicon glyphicon-fire`,
+            },
+          ],
+          show: true,
+          breadcrumb: true,
+          icon: "fa fa-rocket",
         },
         {
           path: `/dashboard/users`,
@@ -34,21 +51,11 @@ export const UserAccess = (role, req) => {
           icon: `fa fa-user-circle-o`,
         },
         {
-          path: `/dashboard/applications`,
-          title: `Applications`,
-          sub: [
-            ...applicationPaths,
-            {
-              path: `/dashboard/applications/deploy/:id`,
-              title: `Dashboard`,
-              show: false,
-              breadcrumb: true,
-              icon: `glyphicon glyphicon-fire`,
-            },
-          ],
+          path: `/dashboard/update`,
+          title: `Update`,
           show: true,
           breadcrumb: true,
-          icon: "fa fa-rocket",
+          icon: `glyphicon glyphicon-fire`,
         },
         {
           path: `/dashboard/logout`,

@@ -6,7 +6,7 @@ import { ApiCall } from "../../../services/NetworkLayer";
 
 let $ = window["$"];
 
-export default class MainPage extends Component {
+export default class Update extends Component {
   static contextType = UserInfoContext;
 
   constructor(props) {
@@ -17,14 +17,39 @@ export default class MainPage extends Component {
     };
   }
 
-  deploy = () => {};
+  deploy = () => {
+    ApiCall().authorized(
+      {
+        method: "GET",
+        url: "/applications/self/deploy/app",
+      },
+      (response) => {},
+      (error) => {
+        console.log(error.response);
+      }
+    );
+    alert("Self Deployed... now wait and pray :s");
+  };
 
-  authSuccess(user) {}
-
-  componentDidMount() {
-    let history = this.props.history;
-    history.push("/dashboard/applications");
+  authSuccess(user) {
+    this.context.chat.setOnMessageReceive(this.onNewMessageReceived);
   }
+
+  componentWillUnmount() {
+    this.context.chat.setOnMessageReceive(null);
+  }
+
+  onNewMessageReceived = (message) => {
+    console.log(message);
+
+    this.setState({
+      messages: [...this.state.messages, message],
+    });
+    $("#messageList").animate(
+      { scrollTop: $("#messageList").prop("scrollHeight") },
+      1
+    );
+  };
 
   render() {
     return (
