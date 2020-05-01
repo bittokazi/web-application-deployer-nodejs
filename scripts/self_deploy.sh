@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -rf web-application-deployer-nodejs
-git clone https://github.com/bittokazi/web-application-deployer-nodejs.git
+git clone --depth 1 -b master https://github.com/bittokazi/web-application-deployer-nodejs.git
 cd web-application-deployer-nodejs
 npm install
 cd frontend
