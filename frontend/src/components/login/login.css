@@ -18,32 +18,32 @@ body {
   left: 0;
   background: #3498db;
 }
-.login {
+.login-form-wrapper .login {
   margin: 20px auto;
   width: 350px;
   top: 50%;
   position: relative;
   margin-top: -165px;
 }
-.login-screen {
+.login-form-wrapper .login-screen {
   background-color: #fff;
   padding: 50px;
   border-radius: 5px;
 }
 
-.app-title {
+.login-form-wrapper .app-title {
   text-align: center;
   color: #777;
 }
 
-.login-form {
+.login-form-wrapper .login-form {
   text-align: center;
 }
-.control-group {
+.login-form-wrapper .control-group {
   margin-bottom: 10px;
 }
 
-input {
+.login-form-wrapper input {
   text-align: center;
   background-color: #ecf0f1;
   border: 2px solid transparent;
@@ -55,12 +55,12 @@ input {
   transition: border 0.5s;
 }
 
-input:focus {
+.login-form-wrapper input:focus {
   border: 2px solid #3498db;
   box-shadow: none;
 }
 
-.btn {
+.login-form-wrapper .btn {
   border: 2px solid transparent;
   background: #3498db;
   color: #ffffff;
@@ -77,11 +77,11 @@ input:focus {
   margin: 0 auto;
 }
 
-.btn:hover {
+.login-form-wrapper .btn:hover {
   background-color: #2980b9;
 }
 
-.login-link {
+.login-form-wrapper .login-link {
   font-size: 12px;
   color: #444;
   display: block;
