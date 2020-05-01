@@ -9,11 +9,11 @@ export const UserAccess = (role, req) => {
 
     menu = {
       path: `/dashboard`,
-      title: `Dashboard`,
+      title: `Home`,
       sub: [
         {
           path: `/dashboard`,
-          title: `Dashboard`,
+          title: `Home`,
           show: true,
           breadcrumb: true,
           icon: `glyphicon glyphicon-fire`,
