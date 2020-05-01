@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const isActive = path => {
+const isActive = (path) => {
   if (path.split("/").length == 3) {
     if (path.split("/")[2] == window.location.pathname.split("/")[2]) {
       return `activeClass`;
@@ -22,7 +22,7 @@ const isActive = path => {
   }
 };
 
-const isActiveSub = path => {
+const isActiveSub = (path) => {
   if (path == window.location.pathname) {
     return `activeClass`;
   } else {
@@ -35,20 +35,20 @@ export default function DashboardNavbarItem({ item }) {
     <li>
       {item.sub != undefined && item.show && (
         <Link to={item.path} className={`waves-effect ${isActive(item.path)}`}>
-          <i className={item.icon}></i> {item.title}
+          <i className={item.icon}></i>&nbsp; {item.title}
           <span class="fa arrow"></span>
         </Link>
       )}
       {item.sub == undefined && item.show && (
         <Link to={item.path} className={`waves-effect ${isActive(item.path)}`}>
-          <i className={item.icon}></i> {item.title}
+          <i className={item.icon}></i>&nbsp; {item.title}
         </Link>
       )}
 
       {item.sub != undefined && (
         <ul className={`nav nav-second-level collapse`}>
           {item.sub.map(
-            navItem =>
+            (navItem) =>
               navItem.show && (
                 <li>
                   <Link

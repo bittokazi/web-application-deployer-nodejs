@@ -5,6 +5,7 @@ import AuthStore from "./../../services/AuthStore";
 import querystring from "querystring";
 import { Link } from "react-router-dom";
 import config from "./../../config";
+import "./login.css";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -68,12 +69,53 @@ export default function Login() {
 
   return (
     <>
-      <div>
-        <div class="limiter">
-          <div class="container-login100">
-            <div class="wrap-login100">
-              <form class="login100-form validate-form" onSubmit={loginUser}>
-                <span class="login100-form-title p-b-26">
+      <form class="login-form-wrapper" onSubmit={loginUser}>
+        <div class="login">
+          <div class="login-screen">
+            <div class="app-title">
+              <h1>Login</h1>
+            </div>
+
+            <div class="login-form">
+              <div class="control-group">
+                <input
+                  type="text"
+                  class="login-field"
+                  value=""
+                  placeholder="username"
+                  id="login-name"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                />
+                <label
+                  class="login-field-icon fui-user"
+                  for="login-name"
+                ></label>
+              </div>
+
+              <div class="control-group">
+                <input
+                  type="password"
+                  class="login-field"
+                  value=""
+                  placeholder="password"
+                  id="login-pass"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <label
+                  class="login-field-icon fui-lock"
+                  for="login-pass"
+                ></label>
+              </div>
+
+              <button class="btn btn-primary btn-large btn-block">login</button>
+              {/* <a class="login-link" href="#">Lost your password?</a> */}
+            </div>
+          </div>
+        </div>
+
+        {/* <span class="login100-form-title p-b-26">
                   Application Deployer
                 </span>
                 <span class="login100-form-title p-b-48">
@@ -119,14 +161,8 @@ export default function Login() {
                     <div class="login100-form-bgbtn"></div>
                     <button class="login100-form-btn">Login</button>
                   </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div id="dropDownSelect1"></div>
-      </div>
+                </div> */}
+      </form>
     </>
   );
 }

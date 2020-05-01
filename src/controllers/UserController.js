@@ -24,10 +24,7 @@ export const UserList = (req, res, next) => {
 
 export const addUserController = (req, res, next) => {
   addUserProtected(
-    req,
-    res,
     req.body,
-    req.tenant.key,
     (result) => {
       return res.status(200).json(result);
     },

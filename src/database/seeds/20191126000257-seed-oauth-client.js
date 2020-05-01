@@ -1,11 +1,12 @@
 "use strict";
+require("dotenv").config();
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const userExist = await queryInterface.sequelize.query(
       `SELECT * FROM "oauth_clients" WHERE id = 1`,
       {
-        type: queryInterface.sequelize.QueryTypes.SELECT
+        type: queryInterface.sequelize.QueryTypes.SELECT,
       }
     );
     if (userExist.length < 1) {
@@ -13,13 +14,13 @@ module.exports = {
         "oauth_clients",
         [
           {
-            client_id: "b3yg23t4t34utv34jtv34jv3",
-            client_secret: "hjb34h5hj34b6jh3b6jjb3jb6",
+            client_id: process.env._DEFAULT_OAUTH_CLIENT_ID,
+            client_secret: process.env._DEFAULT_OAUTH_CLIENT_SECRET,
             redirect_uri: "n/a",
             grant_types: "password,refresh_token",
             createdAt: new Date(),
-            updatedAt: new Date()
-          }
+            updatedAt: new Date(),
+          },
         ],
         {}
       );
@@ -35,5 +36,5 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
-  }
+  },
 };

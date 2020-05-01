@@ -8,6 +8,8 @@ export const Config = () => {
     _BACKEND_URL: process.env._BACKEND_URL,
     _SERVICE_AUTH_KEY: process.env._SERVICE_AUTH_KEY,
     _APPLICATION_FOLDER: process.env._APPLICATION_FOLDER,
+    _DEFAULT_OAUTH_CLIENT_ID: process.env._DEFAULT_OAUTH_CLIENT_ID,
+    _DEFAULT_OAUTH_CLIENT_SECRET: process.env._DEFAULT_OAUTH_CLIENT_SECRET,
   };
 };
 

@@ -19,8 +19,8 @@ export default function DashboardHeader() {
             </Link>
             <div class="top-left-part">
               <a class="logo">
-                <i class="glyphicon glyphicon-fire"></i>&nbsp;
-                <span class="hidden-xs">V1.0.1</span>
+                <i class="fa fa-rocket"></i>&nbsp;&nbsp;
+                <span class="hidden-xs">Deployer</span>
               </a>
             </div>
             <ul class="nav navbar-top-links navbar-left hidden-xs">

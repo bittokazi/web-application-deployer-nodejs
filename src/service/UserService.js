@@ -3,6 +3,7 @@ import * as db from "../models";
 import { validationResult } from "express-validator";
 import { KJUR } from "jsrsasign";
 import Config from "../config/Config";
+import UserRole from "./UserRole";
 
 export const getAllUsers = (req, success, error) => {
   let where = {};
@@ -20,7 +21,9 @@ export const getAllUsers = (req, success, error) => {
     });
 };
 
-export const addUserProtected = (req, res, payload, tenant, success, error) => {
+export const addUserProtected = (payload, success, error) => {
+  payload.role = UserRole.superAdmin;
+  payload.changePassword = true;
   db.user
     .create(payload)
     .then((result) => {
@@ -45,4 +48,23 @@ export const generateChatServerToken = (user) => {
     Config()._JWT_SECRET
   );
   return authToken;
+};
+
+export const checkUserAndEmailExist = (payload, success, error) => {
+  db.user
+    .findAll({
+      where: db.Sequelize.or(
+        { username: payload.username },
+        { email: payload.email }
+      ),
+      attributes: ["id"],
+      include: [{ all: true }],
+      order: [["id", "DESC"]],
+    })
+    .then((result) => {
+      success(result);
+    })
+    .catch((err) => {
+      error(err);
+    });
 };

@@ -4,10 +4,9 @@ import { UserInfoContext } from "./../providers/UserInfoProvider";
 import config from "./../config";
 
 export default function DashboardSidebar(props) {
-  let subdomain = window.location.hostname.split(".");
   return (
     <UserInfoContext.Consumer>
-      {userContextConsumer => (
+      {(userContextConsumer) => (
         <div class="navbar-default sidebar nicescroll" role="navigation">
           <div class="sidebar-nav navbar-collapse ">
             <ul class="nav" id="side-menu">
@@ -26,21 +25,9 @@ export default function DashboardSidebar(props) {
                 </div>
               </li>
               {userContextConsumer.user != null &&
-                userContextConsumer.user.access.sub.map(navItem => {
+                userContextConsumer.user.access.sub.map((navItem) => {
                   return (
-                    <>
-                      {(subdomain.length == config.subdomainNumber - 1 ||
-                        !config.subdomainMode ||
-                        (subdomain.length > config.subdomainNumber - 1 &&
-                          navItem.path != "/select-tenant" &&
-                          subdomain[0] != "www") ||
-                        (subdomain.length > config.subdomainNumber - 1 &&
-                          subdomain[0] == "www")) && (
-                        <DashboardNavbarItem
-                          item={navItem}
-                        ></DashboardNavbarItem>
-                      )}
-                    </>
+                    <DashboardNavbarItem item={navItem}></DashboardNavbarItem>
                   );
                 })}
             </ul>
