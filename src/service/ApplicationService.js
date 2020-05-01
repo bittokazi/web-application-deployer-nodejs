@@ -287,12 +287,27 @@ export const selfDeployerService = (req, success, error) => {
   );
   bash.on("exit", function (data) {
     console.log("exit", data.toString());
+    req.socketIo.emit("chat.message.deploy", {
+      message: "exit: " + data.toString(),
+      name: "deployer",
+      type: "self-deployment",
+    });
   });
   bash.stderr.on("data", function (data) {
     console.log("stderr", data.toString());
+    req.socketIo.emit("chat.message.deploy", {
+      message: "err> " + data.toString(),
+      name: "deployer",
+      type: "self-deployment",
+    });
   });
   bash.stdout.on("data", function (data) {
     console.log("stdout", data.toString());
+    req.socketIo.emit("chat.message.deploy", {
+      message: "log> " + data.toString(),
+      name: "deployer",
+      type: "self-deployment",
+    });
   });
   success({});
 };
