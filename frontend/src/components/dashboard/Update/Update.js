@@ -43,7 +43,7 @@ export default class Update extends Component {
               .catch((err) => {
                 console.log(err);
               });
-          }, 2000);
+          }, 5000);
         },
         (error) => {
           console.log(error.response);
