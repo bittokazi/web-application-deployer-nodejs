@@ -1,0 +1,36 @@
+.update-wrapper {
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+  background: rgba(0, 0, 0, 0.7);
+
+  height: 100%;
+
+  width: 100%;
+
+  z-index: 9999;
+  display: none;
+}
+
+.update-wrapper .update-box {
+  top: 50%;
+
+  position: relative;
+
+  left: 50%;
+
+  width: 400px;
+
+  margin-left: -200px;
+
+  text-align: center;
+
+  color: white;
+}
+.update-wrapper .update-box h3 {
+  font-weight: bold;
+  color: white;
+}

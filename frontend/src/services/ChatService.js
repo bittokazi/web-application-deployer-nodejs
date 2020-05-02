@@ -5,7 +5,7 @@ export default class ChatService {
   constructor() {
     this.connected = false;
     this.onMessageReceive = null;
-    this.onUserSpace = null;
+    this.onConnect = null;
     this.onDisconnect = null;
     this.onUserStatus = null;
     this.onRoomList = null;
@@ -26,6 +26,7 @@ export default class ChatService {
           self.listenToMessage();
           // self.listenToUserSpace();
           self.listentToDisconnect();
+          if (self.onConnect) self.onConnect();
           // self.listenToOnUserStatus();
           // self.getRooms(true).then((rooms) => {
           //   if (callback) callback(rooms);
@@ -76,8 +77,8 @@ export default class ChatService {
     this.chatComponentConnect = callback;
   }
 
-  setOnUserSpace(callback) {
-    this.onUserSpace = callback;
+  setOnConnect(callback) {
+    this.onConnect = callback;
   }
 
   setOnUserStatus(callback) {

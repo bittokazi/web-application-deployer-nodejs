@@ -3,6 +3,7 @@ import AuthComponent from "./../AuthComponent";
 import DashboardBreadcrumb from "./.././../../layouts/DashboardBreadcrumb";
 import { UserInfoContext } from "./../../../providers/UserInfoProvider";
 import { ApiCall } from "../../../services/NetworkLayer";
+import "./update.css";
 
 let $ = window["$"];
 
@@ -14,30 +15,49 @@ export default class Update extends Component {
     this.state = {
       application: [],
       messages: [],
+      updating: false,
     };
   }
 
   deploy = () => {
-    ApiCall().authorized(
-      {
-        method: "GET",
-        url: "/applications/self/deploy/app",
-      },
-      (response) => {},
-      (error) => {
-        console.log(error.response);
-      }
-    );
-    alert("Self Deployed... now wait and pray :s");
+    let answer = window.confirm("Update System?");
+    if (answer) {
+      this.setState({
+        updating: true,
+      });
+      ApiCall().authorized(
+        {
+          method: "GET",
+          url: "/applications/self/deploy/app",
+        },
+        (response) => {},
+        (error) => {
+          console.log(error.response);
+        }
+      );
+    } else {
+    }
   };
 
   authSuccess(user) {
     this.context.chat.setOnMessageReceive(this.onNewMessageReceived);
+    this.context.chat.setOnDisconnect(this.onDisConnectListner);
+    this.context.chat.setOnConnect(this.onConnect);
   }
 
   componentWillUnmount() {
     this.context.chat.setOnMessageReceive(null);
+    this.context.chat.setOnDisconnect(null);
+    this.context.chat.setOnConnect(null);
   }
+
+  onConnect = () => {
+    if (this.state.updating) window.location.reload();
+  };
+
+  onDisConnectListner = () => {
+    $("#update-modal").css("display", "block");
+  };
 
   onNewMessageReceived = (message) => {
     console.log(message);
@@ -66,22 +86,18 @@ export default class Update extends Component {
               <div class="row">
                 <div class="col-md-12">
                   <div class="white-box">
-                    <button onClick={() => this.deploy()}>
-                      Self Update and Deploy
-                    </button>
-                    <div
-                      class="row"
-                      id="messageList"
-                      style={{
-                        background: "black",
-                        color: "white",
-                        height: "600px",
-                        "overflow-y": "scroll",
-                      }}
+                    <h5>Current Version: 1.0.3</h5>
+                    <br></br>
+                    <button
+                      class="btn btn-success waves-effect waves-light"
+                      onClick={() => this.deploy()}
                     >
-                      {this.state.messages.map((message) => {
-                        return <div class="col-md-12">{message.message}</div>;
-                      })}
+                      Update System
+                    </button>
+                  </div>
+                  <div class="update-wrapper" id="update-modal">
+                    <div class="update-box">
+                      <h3>Please wait, Updating System...</h3>
                     </div>
                   </div>
                 </div>

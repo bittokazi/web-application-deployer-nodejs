@@ -11,6 +11,7 @@ import NotFound from "./NotFound";
 import AddApplication from "./application/AddApplication";
 import ShowApplication from "./application/ShowApplication";
 import EditApplication from "./application/EditApplication";
+import Update from "./Update/Update";
 
 export default function Dashboard() {
   return (
@@ -40,6 +41,7 @@ export default function Dashboard() {
           path="/dashboard/applications/deploy/:id"
           component={ShowApplication}
         />
+        <Route exact path="/dashboard/update" component={Update} />
         <Route exact path="/dashboard/logout" component={Logout} />
         <Route path="/dashboard/*" component={NotFound} />
       </Switch>
