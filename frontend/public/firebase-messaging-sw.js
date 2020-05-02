@@ -1,16 +1,13 @@
 importScripts("https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/7.8.0/firebase-messaging.js");
 
-firebase.initializeApp({
-  apiKey: "AIzaSyC9LNV82NEbcJP-u_8TAezHaWd3MwzO8do",
-  authDomain: "web-app-deployer-nodejs.firebaseapp.com",
-  databaseURL: "https://web-app-deployer-nodejs.firebaseio.com",
-  projectId: "web-app-deployer-nodejs",
-  storageBucket: "web-app-deployer-nodejs.appspot.com",
-  messagingSenderId: "544415538777",
-  appId: "1:544415538777:web:b16fb851b1175b2eeddb48",
-  measurementId: "G-51RZHFR90J",
-});
+firebase.initializeApp(
+  JSON.parse(
+    atob(
+      "eyJhcGlLZXkiOiJBSXphU3lDOUxOVjgyTkViY0pQLXVfOFRBZXpIYVdkM013ek84ZG8iLCJhdXRoRG9tYWluIjoid2ViLWFwcC1kZXBsb3llci1ub2RlanMuZmlyZWJhc2VhcHAuY29tIiwiZGF0YWJhc2VVUkwiOiJodHRwczovL3dlYi1hcHAtZGVwbG95ZXItbm9kZWpzLmZpcmViYXNlaW8uY29tIiwicHJvamVjdElkIjoid2ViLWFwcC1kZXBsb3llci1ub2RlanMiLCJzdG9yYWdlQnVja2V0Ijoid2ViLWFwcC1kZXBsb3llci1ub2RlanMuYXBwc3BvdC5jb20iLCJtZXNzYWdpbmdTZW5kZXJJZCI6IjU0NDQxNTUzODc3NyIsImFwcElkIjoiMTo1NDQ0MTU1Mzg3Nzc6d2ViOmIxNmZiODUxYjExNzViMmVlZGRiNDgiLCJtZWFzdXJlbWVudElkIjoiRy01MVJaSEZSOTBKIn0="
+    )
+  )
+);
 
 const messaging = firebase.messaging();
 
