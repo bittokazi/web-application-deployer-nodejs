@@ -13,7 +13,7 @@ export default function Login() {
   let useHistoryRouter = useHistory();
 
   useEffect(() => {
-    document.title = "Login | Project Management and Bug Tracker";
+    document.title = "Deploy Automation platform by Bitto Kazi";
     authCheck();
   }, []);
 
