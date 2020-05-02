@@ -134,6 +134,7 @@ export const showApplication = (id, success, error) => {
             secret: result[0].secret,
             script: data,
             env: _data,
+            isDeploying: result[0].isDeploying,
           });
         });
       });

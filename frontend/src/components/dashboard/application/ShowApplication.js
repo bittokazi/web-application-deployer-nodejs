@@ -45,7 +45,7 @@ export default class ShowApplication extends Component {
 
   onNewMessageReceived = (message) => {
     console.log(message);
-    if (this.state.name == message.name) {
+    if (this.state.application.name == message.name) {
       if (message.type == "deployment-start") {
         this.setState({
           isDeploying: true,
