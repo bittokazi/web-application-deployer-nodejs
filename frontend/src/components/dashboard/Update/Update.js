@@ -32,7 +32,19 @@ export default class Update extends Component {
           method: "GET",
           url: "/applications/self/deploy/app",
         },
-        (response) => {},
+        (response) => {
+          setInterval(() => {
+            ApiCall()
+              .public()
+              .get("/health")
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }, 2000);
+        },
         (error) => {
           console.log(error.response);
         }
