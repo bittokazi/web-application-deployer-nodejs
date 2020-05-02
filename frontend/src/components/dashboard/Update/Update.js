@@ -26,6 +26,7 @@ export default class Update extends Component {
       this.setState({
         updating: true,
       });
+      $("#update-modal").css("display", "block");
       ApiCall().authorized(
         {
           method: "GET",
@@ -65,14 +66,6 @@ export default class Update extends Component {
 
   onNewMessageReceived = (message) => {
     console.log(message);
-
-    // this.setState({
-    //   messages: [...this.state.messages, message],
-    // });
-    // $("#messageList").animate(
-    //   { scrollTop: $("#messageList").prop("scrollHeight") },
-    //   1
-    // );
   };
 
   render() {
