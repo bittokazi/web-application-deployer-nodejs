@@ -16,6 +16,8 @@ export default class ChatService {
   }
 
   connect(callback, token) {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
     this.token = token;
     let self = this;
     this.socket = io.connect(config.CHAT_SERVER_URL);

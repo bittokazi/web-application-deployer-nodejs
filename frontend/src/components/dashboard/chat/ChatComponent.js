@@ -13,21 +13,26 @@ export default class ChatComponent extends Component {
     this.state = {
       messages: [],
       loaded: false,
+      init: false,
+      componentLoaded: false,
     };
   }
 
   componentDidMount() {
     this.context.chat.setChatComponentConnect(this.connect);
     this.context.chat.setOnUserStatus(this.onStatus);
-    this.connect();
   }
 
   connect = () => {
+    console.log("bbbbbbbbbbbbbbbbbbbbbbbbbb");
+    this.state.init = false;
     if (
       !this.context.chat.connected &&
       this.context.chat.connectChat &&
-      !this.state.loaded
+      !this.state.loaded &&
+      !this.state.componentLoaded
     ) {
+      this.state.componentLoaded = true;
       ApiCall().authorized(
         {
           method: "GET",

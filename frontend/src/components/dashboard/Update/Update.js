@@ -70,6 +70,7 @@ export default class Update extends Component {
   };
 
   onDisConnectListner = () => {
+    if (!this.state.updating) return;
     $("#update-modal").css("display", "block");
     this.setState({
       updateMessage: "Please wait, Updating System...",
