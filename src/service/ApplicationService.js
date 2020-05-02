@@ -275,6 +275,12 @@ export const githubDeployApplication = (req, success, error) => {
             .digest("hex")}`;
           if (req.headers["x-hub-signature"] === signature) {
             if (req.body.ref === "refs/heads/master") {
+              sendNotification(
+                "Github auto Deployment",
+                result[0].name + " github auto deployment started",
+                "",
+                ""
+              );
               deployApplication(req, req.body, result[0].id, success, error);
             } else error(err);
           } else error(err);
@@ -288,47 +294,50 @@ export const githubDeployApplication = (req, success, error) => {
 
 export const selfDeployerService = (req, success, error) => {
   console.log("self deploy...");
-  sendNotification("System Update", "System update Started", "", "");
-  let bash = exec(
-    "cp " +
-      __dirname +
-      "/../../scripts/self_deploy.sh " +
-      __dirname +
-      "/../../../self_deploy.sh && cp " +
-      __dirname +
-      "/../../.env " +
-      __dirname +
-      "/../../../.env && cp " +
-      __dirname +
-      "/../../scripts/self_deploy.js " +
-      __dirname +
-      "/../../../self_deploy.js && cd ../ && node self_deploy.js"
+  sendNotification("System Update", "System update Started", "", "").finally(
+    () => {
+      let bash = exec(
+        "cp " +
+          __dirname +
+          "/../../scripts/self_deploy.sh " +
+          __dirname +
+          "/../../../self_deploy.sh && cp " +
+          __dirname +
+          "/../../.env " +
+          __dirname +
+          "/../../../.env && cp " +
+          __dirname +
+          "/../../scripts/self_deploy.js " +
+          __dirname +
+          "/../../../self_deploy.js && cd ../ && node self_deploy.js"
+      );
+      bash.on("exit", function (data) {
+        console.log("exit", data.toString());
+        req.socketIo.emit("chat.message.deploy", {
+          message: "exit: " + data.toString(),
+          name: "deployer",
+          type: "self-deployment",
+        });
+      });
+      bash.stderr.on("data", function (data) {
+        console.log("stderr", data.toString());
+        req.socketIo.emit("chat.message.deploy", {
+          message: "err> " + data.toString(),
+          name: "deployer",
+          type: "self-deployment",
+        });
+      });
+      bash.stdout.on("data", function (data) {
+        console.log("stdout", data.toString());
+        req.socketIo.emit("chat.message.deploy", {
+          message: "log> " + data.toString(),
+          name: "deployer",
+          type: "self-deployment",
+        });
+      });
+      success({});
+    }
   );
-  bash.on("exit", function (data) {
-    console.log("exit", data.toString());
-    req.socketIo.emit("chat.message.deploy", {
-      message: "exit: " + data.toString(),
-      name: "deployer",
-      type: "self-deployment",
-    });
-  });
-  bash.stderr.on("data", function (data) {
-    console.log("stderr", data.toString());
-    req.socketIo.emit("chat.message.deploy", {
-      message: "err> " + data.toString(),
-      name: "deployer",
-      type: "self-deployment",
-    });
-  });
-  bash.stdout.on("data", function (data) {
-    console.log("stdout", data.toString());
-    req.socketIo.emit("chat.message.deploy", {
-      message: "log> " + data.toString(),
-      name: "deployer",
-      type: "self-deployment",
-    });
-  });
-  success({});
 };
 
 function ensureExists(path, cb) {
