@@ -10,6 +10,7 @@ export const Config = () => {
     _APPLICATION_FOLDER: process.env._APPLICATION_FOLDER,
     _DEFAULT_OAUTH_CLIENT_ID: process.env._DEFAULT_OAUTH_CLIENT_ID,
     _DEFAULT_OAUTH_CLIENT_SECRET: process.env._DEFAULT_OAUTH_CLIENT_SECRET,
+    _FCM_SERVER_KEY: process.env._FCM_SERVER_KEY,
   };
 };
 

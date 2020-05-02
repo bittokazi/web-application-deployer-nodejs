@@ -6,6 +6,7 @@ import {
   showApplication,
   selfDeployerService,
 } from "./../service/ApplicationService";
+import { getAllDeployments } from "../service/DeploymentService";
 
 export const addApplication = (req, res, next) => {
   createApplication(
@@ -21,6 +22,18 @@ export const addApplication = (req, res, next) => {
 
 export const getAllApplicationController = (req, res, next) => {
   getAllApplication(
+    (result) => {
+      return res.status(200).json(result);
+    },
+    (error) => {
+      return res.status(500).json(error);
+    }
+  );
+};
+
+export const getAllDeploymentsController = (req, res, next) => {
+  getAllDeployments(
+    req,
     (result) => {
       return res.status(200).json(result);
     },

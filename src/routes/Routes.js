@@ -1,6 +1,7 @@
 import { HelloWorld } from "./../controllers/HelloController";
 
 import userRoutes from "./User";
+import fcmRoutes from "./Fcm";
 
 import UserInfo from "./../engine/oauth/OauthInfoInterceptor";
 import TenantUserRole from "./../middlewares/TenantUserRole";
@@ -24,6 +25,14 @@ export const Routes = (app, socketIoCallback) => {
     UserInfo,
     TenantUserRole,
     userRoutes
+  );
+  app.use(
+    "/api/fcm",
+    app.oauth.authenticate(),
+    TenantIdentifierInterceptor,
+    UserInfo,
+    TenantUserRole,
+    fcmRoutes
   );
   app.use(
     "/api/applications",

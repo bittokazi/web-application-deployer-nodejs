@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { ApiCall } from "./../../services/NetworkLayer";
 import { UserInfoContext } from "./../../providers/UserInfoProvider";
 import AuthStore from "./../../services/AuthStore";
+import { askForPermissioToReceiveNotifications } from "../../services/firebase";
 
 let $ = window.$;
 
@@ -56,8 +57,10 @@ export class AuthComponent extends Component {
         url: "/users/whoami",
       },
       (resolve) => {
-        console.log("ffffffffff", resolve);
-
+        if (!this.context.fcmsubscribe) {
+          askForPermissioToReceiveNotifications();
+          this.context.setFcmsubscribe(true);
+        }
         if (!this.checkPageAccess(resolve.data.access)) {
           history.push("/dashboard");
           return;

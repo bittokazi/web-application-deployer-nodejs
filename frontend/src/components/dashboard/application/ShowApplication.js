@@ -60,7 +60,7 @@ export default class ShowApplication extends Component {
         });
       }
       this.setState({
-        messages: [...this.state.messages, message],
+        messages: [...this.state.messages, message.message],
       });
       $("#messageList").animate(
         { scrollTop: $("#messageList").prop("scrollHeight") },
@@ -75,9 +75,7 @@ export default class ShowApplication extends Component {
         method: "GET",
         url: "/applications/" + this.props.match.params.id + "/deploy",
       },
-      (response) => {
-        this.setState({ application: response.data });
-      },
+      (response) => {},
       (error) => {
         console.log(error.response);
       }
@@ -104,6 +102,8 @@ export default class ShowApplication extends Component {
                 >
                   Deploy Application
                 </button>
+                <br />
+                <br />
                 <div
                   class="row"
                   id="messageList"
@@ -115,7 +115,7 @@ export default class ShowApplication extends Component {
                   }}
                 >
                   {this.state.messages.map((message) => {
-                    return <div class="col-md-12">{message.message}</div>;
+                    return <div class="col-md-12">{message}</div>;
                   })}
                 </div>
               </div>

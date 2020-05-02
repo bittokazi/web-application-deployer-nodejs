@@ -62,6 +62,7 @@ export default class ChatService {
   listenToMessage() {
     this.socket.on("chat.message.deploy", (message) => {
       if (this.onMessageReceive != null) this.onMessageReceive(message);
+      if (this.onUserStatus != null) this.onUserStatus(message);
     });
   }
 

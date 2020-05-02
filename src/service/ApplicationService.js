@@ -3,6 +3,7 @@ import fs from "fs";
 import { Config } from "./../config/Config";
 var exec = require("child_process").exec;
 import crypto from "crypto";
+import { sendNotification } from "./FirebaseService";
 
 export const createApplication = (body, success, error) => {
   ensureExists(Config()._APPLICATION_FOLDER + "/" + body.name, function (err) {
@@ -177,6 +178,13 @@ export const deployApplication = (req, payload, id, success, error) => {
             type: "deployment-start",
           });
 
+          sendNotification(
+            "Deployment Started",
+            result[0].name + " deployment started",
+            "",
+            ""
+          );
+
           let bash = exec(
             "cd " + result[0].location + " && bash " + result[0].script
           );
@@ -210,6 +218,12 @@ export const deployApplication = (req, payload, id, success, error) => {
                 name: result[0].name,
               })
               .then((deployment) => {
+                sendNotification(
+                  "Deployment Success",
+                  result[0].name + " deployment successful",
+                  "",
+                  ""
+                );
                 req.socketIo.emit("chat.message.deploy", {
                   message:
                     "Deploy>>>>>>>>>>>>" +

@@ -3,6 +3,7 @@ import AuthComponent from "./../AuthComponent";
 import DashboardBreadcrumb from "./.././../../layouts/DashboardBreadcrumb";
 import { UserInfoContext } from "./../../../providers/UserInfoProvider";
 import { ApiCall } from "../../../services/NetworkLayer";
+import { askForPermissioToReceiveNotifications } from "../../../services/firebase";
 
 let $ = window["$"];
 
@@ -19,12 +20,12 @@ export default class MainPage extends Component {
 
   deploy = () => {};
 
-  authSuccess(user) {}
-
-  componentDidMount() {
+  authSuccess(user) {
     let history = this.props.history;
     history.push("/dashboard/applications");
   }
+
+  componentDidMount() {}
 
   render() {
     return (

@@ -22,8 +22,10 @@ export default class DashboardNotification extends Component {
           <a onClick={() => this.closeModal()} class="closed" marked="1">
             ×
           </a>
-          <h4>Success</h4>
-          <b>Update</b> went successfull.
+          <h4 id="alerttoprightTitle">Success</h4>
+          <p id="alerttoprightBody">
+            <b>Update</b> went successfull.
+          </p>
         </div>
       </>
     );

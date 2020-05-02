@@ -18,6 +18,7 @@ export default class ChatComponent extends Component {
 
   componentDidMount() {
     this.context.chat.setChatComponentConnect(this.connect);
+    this.context.chat.setOnUserStatus(this.onStatus);
     this.connect();
   }
 
@@ -37,7 +38,6 @@ export default class ChatComponent extends Component {
             this.setState({
               loaded: true,
             });
-            //this.context.chat.setOnMessageReceive(this.onNewMessageReceived);
           }, resolve.data.token);
         },
         (error) => {}
@@ -48,35 +48,28 @@ export default class ChatComponent extends Component {
   componentWillUnmount() {
     this.context.chat.disconnect();
     this.context.chat.setChatComponentConnect(null);
-    // this.context.chat.setOnRoomList(null);
+    this.context.chat.setOnUserStatus(null);
   }
-
-  // onChatServerDisconnect = () => {
-  //   console.log("disconnected");
-  //   this.setState({
-  //     connected: false,
-  //   });
-  // };
-
-  // onScrolltoTop = () => {
-  //   this.fetchHistoryOfRoom(
-  //     this.state.selectedRoom.roomUid,
-  //     this.state.timestamp
-  //   );
-  // };
 
   onNewMessageReceived = (message) => {
     console.log(message);
   };
 
-  onSendNewMessage = () => {
-    this.context.chat.sendMessage(
-      this.state.selectedRoom.roomUid,
-      this.state.text,
-      (message) => {
-        console.log("sent", message);
-      }
-    );
+  onStatus = (message) => {
+    console.log(message);
+    if (message.type == "deployment-start") {
+      $("#alerttopright").fadeToggle(350).delay(8000).fadeToggle(350);
+      $("#alerttoprightTitle").text("Deployment Start");
+      $("#alerttoprightBody").text("Deployment Started for " + message.name);
+    }
+    if (
+      message.type == "deployment-success" ||
+      message.type == "deployment-exit"
+    ) {
+      $("#alerttopright").fadeToggle(350).delay(8000).fadeToggle(350);
+      $("#alerttoprightTitle").text("Deployment Success");
+      $("#alerttoprightBody").text("Deployment Successful for " + message.name);
+    }
   };
 
   render() {

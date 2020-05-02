@@ -13,7 +13,7 @@ export default class AddUser extends Component {
       password: "",
       email: "",
       enableSubmit: false,
-      enablePassword: false
+      enablePassword: false,
     };
   }
 
@@ -28,7 +28,7 @@ export default class AddUser extends Component {
     }
   };
 
-  addUser = event => {
+  addUser = (event) => {
     event.preventDefault();
     let history = this.props.history;
     ApiCall().authorized(
@@ -38,10 +38,10 @@ export default class AddUser extends Component {
         data: {
           username: this.state.username,
           email: this.state.email,
-          password: this.state.password
-        }
+          password: this.state.password,
+        },
       },
-      response => {
+      (response) => {
         if (response.status == 422) {
           return;
         }
@@ -50,14 +50,13 @@ export default class AddUser extends Component {
           password: "",
           email: "",
           enableSubmit: false,
-          enablePassword: false
+          enablePassword: false,
         });
-        $("#alerttopright")
-          .fadeToggle(350)
-          .delay(3000)
-          .fadeToggle(350);
+        $("#alerttopright").fadeToggle(350).delay(3000).fadeToggle(350);
+        $("#alerttoprightTitle").text("Success");
+        $("#alerttoprightBody").text("User Added Successfully");
       },
-      error => {
+      (error) => {
         console.log(error.response);
       }
     );
@@ -71,17 +70,17 @@ export default class AddUser extends Component {
         url: "/users/check-exist",
         data: {
           username: this.state.username,
-          email: this.state.email
-        }
+          email: this.state.email,
+        },
       },
-      response => {
+      (response) => {
         if (response.data.length > 0) {
           this.setState({ enablePassword: false, enableSubmit: true });
         } else {
           this.setState({ enablePassword: true, enableSubmit: true });
         }
       },
-      error => {
+      (error) => {
         console.log(error.response);
       }
     );
@@ -102,7 +101,7 @@ export default class AddUser extends Component {
               <div class="white-box">
                 <form
                   class="form-material form-horizontal"
-                  onSubmit={event => this.addUser(event)}
+                  onSubmit={(event) => this.addUser(event)}
                 >
                   <div class="form-group">
                     <label class="col-md-12">Username</label>
@@ -111,7 +110,7 @@ export default class AddUser extends Component {
                         type="text"
                         class="form-control form-control-line"
                         value={this.state.username}
-                        onChange={event => this.updateForm(event, "username")}
+                        onChange={(event) => this.updateForm(event, "username")}
                       />
                     </div>
                   </div>
@@ -122,7 +121,7 @@ export default class AddUser extends Component {
                         type="text"
                         class="form-control form-control-line"
                         value={this.state.email}
-                        onChange={event => this.updateForm(event, "email")}
+                        onChange={(event) => this.updateForm(event, "email")}
                       />
                     </div>
                   </div>
@@ -134,7 +133,9 @@ export default class AddUser extends Component {
                           type="text"
                           class="form-control form-control-line"
                           value={this.state.password}
-                          onChange={event => this.updateForm(event, "password")}
+                          onChange={(event) =>
+                            this.updateForm(event, "password")
+                          }
                         />
                       </div>
                     </div>

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import AuthStore from "./../../services/AuthStore";
 import { useHistory } from "react-router-dom";
 import { UserInfoContext } from "./../../providers/UserInfoProvider";
+import { removeFirebaseNotification } from "../../services/firebase";
 
 export default function Logout() {
   const userContext = useContext(UserInfoContext);
@@ -12,6 +13,10 @@ export default function Logout() {
   AuthStore().saveTenantKey(null);
   AuthStore().saveClientCredentials(null);
   AuthStore().saveOauthToken(null);
-  history.push("/");
+  let f = async () => {
+    await removeFirebaseNotification();
+    history.push("/");
+  };
+  f();
   return <div></div>;
 }
