@@ -15,7 +15,7 @@ export const subscribeTopic = (token) => {
       },
       (err, res, body) => {
         if (!err) {
-          return resolve(JSON.parse({}));
+          return resolve({});
         } else {
           return reject({
             error: "error occured",
@@ -43,7 +43,7 @@ export const unSubscribeTopic = (token) => {
       },
       (err, res, body) => {
         if (!err) {
-          return resolve(JSON.parse({}));
+          return resolve({});
         } else {
           return reject({
             error: "error occured",
@@ -79,7 +79,7 @@ export const sendNotification = (title, body, icon, link) => {
       },
       (err, res, body) => {
         if (!err) {
-          return resolve(JSON.parse({}));
+          return resolve({});
         } else {
           return reject({
             error: "error occured",

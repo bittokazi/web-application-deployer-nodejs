@@ -33,7 +33,7 @@ export const askForPermissioToReceiveNotifications = async () => {
     ApiCall().authorized(
       {
         method: "POST",
-        url: "/api/fcm/subscribe",
+        url: "/fcm/subscribe",
         data: { token },
       },
       (response) => {
@@ -64,7 +64,7 @@ export const removeFirebaseNotification = async () => {
     ApiCall().authorized(
       {
         method: "POST",
-        url: "/api/fcm/unsubscribe",
+        url: "/fcm/unsubscribe",
         data: { token },
       },
       (response) => {
