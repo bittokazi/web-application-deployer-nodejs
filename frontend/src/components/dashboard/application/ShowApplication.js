@@ -13,14 +13,30 @@ export default class ShowApplication extends Component {
     super(props);
 
     this.state = {
-      application: [],
+      application: null,
       messages: [],
+      isDeploying: true,
     };
   }
   componentDidMount() {}
 
   authSuccess() {
     this.context.chat.setOnMessageReceive(this.onNewMessageReceived);
+    ApiCall().authorized(
+      {
+        method: "GET",
+        url: "/applications/" + this.props.match.params.id,
+      },
+      (response) => {
+        this.setState({
+          application: response.data,
+          isDeploying: response.data.isDeploying,
+        });
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -29,14 +45,28 @@ export default class ShowApplication extends Component {
 
   onNewMessageReceived = (message) => {
     console.log(message);
-
-    this.setState({
-      messages: [...this.state.messages, message],
-    });
-    $("#messageList").animate(
-      { scrollTop: $("#messageList").prop("scrollHeight") },
-      1
-    );
+    if (this.state.name == message.name) {
+      if (message.type == "deployment-start") {
+        this.setState({
+          isDeploying: true,
+        });
+      }
+      if (
+        message.type == "deployment-success" ||
+        message.type == "deployment-exit"
+      ) {
+        this.setState({
+          isDeploying: false,
+        });
+      }
+      this.setState({
+        messages: [...this.state.messages, message],
+      });
+      $("#messageList").animate(
+        { scrollTop: $("#messageList").prop("scrollHeight") },
+        1
+      );
+    }
   };
 
   deploy = () => {
@@ -67,7 +97,13 @@ export default class ShowApplication extends Component {
           <div class="row">
             <div class="col-md-12">
               <div class="white-box">
-                <button onClick={() => this.deploy()}>Deploy</button>
+                <button
+                  class="btn btn-success waves-effect waves-light"
+                  onClick={() => this.deploy()}
+                  disabled={this.state.isDeploying}
+                >
+                  Deploy Application
+                </button>
                 <div
                   class="row"
                   id="messageList"

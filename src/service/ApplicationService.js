@@ -170,25 +170,27 @@ export const deployApplication = (req, payload, id, success, error) => {
           }
         )
         .then((__result) => {
-          console.log(
-            "cd " + result[0].location + " && bash " + result[0].script
-          );
+          req.socketIo.emit("chat.message.deploy", {
+            message: "Initiated Deployment for " + result[0].name,
+            name: result[0].name,
+            type: "deployment-start",
+          });
 
           let bash = exec(
             "cd " + result[0].location + " && bash " + result[0].script
           );
           bash.stdout.on("data", function (data) {
             req.socketIo.emit("chat.message.deploy", {
-              message: "log: " + data.toString(),
+              message: "log> " + data.toString(),
               name: result[0].name,
-              type: "deployment",
+              type: "deployment-log",
             });
           });
           bash.stderr.on("data", function (data) {
             req.socketIo.emit("chat.message.deploy", {
-              message: "Error: " + data.toString(),
+              message: "Error> " + data.toString(),
               name: result[0].name,
-              type: "deployment",
+              type: "deployment-err",
             });
           });
           bash.on("exit", function (data) {
@@ -209,14 +211,16 @@ export const deployApplication = (req, payload, id, success, error) => {
               .then((deployment) => {
                 req.socketIo.emit("chat.message.deploy", {
                   message:
-                    ">>>>>>>>>>>>" + result[0].name + "<<<<<<<<<<<<SUCCESS",
+                    "Deploy>>>>>>>>>>>>" +
+                    result[0].name +
+                    "<<<<<<<<<<<<SUCCESS",
                   name: result[0].name,
-                  type: "deployment",
+                  type: "deployment-success",
                 });
                 req.socketIo.emit("chat.message.deploy", {
                   message: "Exit: " + data.toString(),
                   name: result[0].name,
-                  type: "deployment",
+                  type: "deployment-exit",
                 });
               });
           });
