@@ -181,7 +181,7 @@ export const deployApplication = (req, payload, id, success, error) => {
           sendNotification(
             "Deployment Started",
             result[0].name + " deployment started",
-            "",
+            "https://www.drupal.org/files/styles/grid-3-2x/public/project-images/icon-deploy.png?itok=vdBMkwKN",
             ""
           );
 
@@ -221,7 +221,7 @@ export const deployApplication = (req, payload, id, success, error) => {
                 sendNotification(
                   "Deployment Success",
                   result[0].name + " deployment successful",
-                  "",
+                  "https://www.drupal.org/files/styles/grid-3-2x/public/project-images/icon-deploy.png?itok=vdBMkwKN",
                   ""
                 );
                 req.socketIo.emit("chat.message.deploy", {
@@ -278,7 +278,7 @@ export const githubDeployApplication = (req, success, error) => {
               sendNotification(
                 "Github auto Deployment",
                 result[0].name + " github auto deployment started",
-                "",
+                "https://www.drupal.org/files/styles/grid-3-2x/public/project-images/icon-deploy.png?itok=vdBMkwKN",
                 ""
               );
               deployApplication(req, req.body, result[0].id, success, error);
