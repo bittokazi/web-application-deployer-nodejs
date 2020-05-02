@@ -16,6 +16,7 @@ export default class Update extends Component {
       application: [],
       messages: [],
       updating: false,
+      updateMessage: "Starting...",
     };
   }
 
@@ -57,18 +58,21 @@ export default class Update extends Component {
 
   onDisConnectListner = () => {
     $("#update-modal").css("display", "block");
+    this.setState({
+      updateMessage: "Please wait, Updating System...",
+    });
   };
 
   onNewMessageReceived = (message) => {
     console.log(message);
 
-    this.setState({
-      messages: [...this.state.messages, message],
-    });
-    $("#messageList").animate(
-      { scrollTop: $("#messageList").prop("scrollHeight") },
-      1
-    );
+    // this.setState({
+    //   messages: [...this.state.messages, message],
+    // });
+    // $("#messageList").animate(
+    //   { scrollTop: $("#messageList").prop("scrollHeight") },
+    //   1
+    // );
   };
 
   render() {
@@ -97,7 +101,7 @@ export default class Update extends Component {
                   </div>
                   <div class="update-wrapper" id="update-modal">
                     <div class="update-box">
-                      <h3>Please wait, Updating System...</h3>
+                      <h3>{this.state.updateMessage}</h3>
                     </div>
                   </div>
                 </div>
