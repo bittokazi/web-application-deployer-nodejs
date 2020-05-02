@@ -8,15 +8,16 @@ export default function Logout() {
   const userContext = useContext(UserInfoContext);
   userContext.chat.disconnect();
   userContext.chat.connectChat = false;
+  userContext.setFcmsubscribe(null);
 
   let history = useHistory();
-  AuthStore().saveTenantKey(null);
-  AuthStore().saveClientCredentials(null);
-  AuthStore().saveOauthToken(null);
-  let f = async () => {
-    await removeFirebaseNotification();
+
+  removeFirebaseNotification().then(() => {
+    AuthStore().saveTenantKey(null);
+    AuthStore().saveClientCredentials(null);
+    AuthStore().saveOauthToken(null);
     history.push("/");
-  };
-  f();
+  });
+
   return <div></div>;
 }

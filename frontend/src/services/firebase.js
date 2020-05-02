@@ -57,26 +57,34 @@ export const askForPermissioToReceiveNotifications = async () => {
 };
 
 export const removeFirebaseNotification = async () => {
-  try {
-    const messaging = firebase.messaging();
-    await messaging.requestPermission();
-    const token = await messaging.getToken();
-    ApiCall().authorized(
-      {
-        method: "POST",
-        url: "/fcm/unsubscribe",
-        data: { token },
-      },
-      (response) => {
-        console.log("unsubscribed to  all");
-      },
-      (error) => {
-        console.log(error.response);
+  return new Promise(async (resolve) => {
+    try {
+      const messaging = firebase.messaging();
+      if (Notification.permission !== "granted") {
+        return resolve({});
       }
-    );
+      const token = await messaging.getToken();
+      console.log(Notification.permission);
+      ApiCall().authorized(
+        {
+          method: "POST",
+          url: "/fcm/unsubscribe",
+          data: { token },
+        },
+        (response) => {
+          console.log("unsubscribed to  all");
+          return resolve({});
+        },
+        (error) => {
+          console.log(error.response);
+          return resolve({});
+        }
+      );
 
-    return token;
-  } catch (error) {
-    console.log(error);
-  }
+      return token;
+    } catch (error) {
+      console.log(error);
+      return resolve({});
+    }
+  });
 };

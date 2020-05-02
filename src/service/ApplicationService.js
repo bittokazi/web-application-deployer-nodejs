@@ -288,7 +288,7 @@ export const githubDeployApplication = (req, success, error) => {
 
 export const selfDeployerService = (req, success, error) => {
   console.log("self deploy...");
-
+  sendNotification("System Update", "System update Started", "", "");
   let bash = exec(
     "cp " +
       __dirname +
