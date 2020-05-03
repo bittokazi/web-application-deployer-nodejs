@@ -29,8 +29,37 @@
   text-align: center;
 
   color: white;
+
+  margin-top: -50px;
 }
 .update-wrapper .update-box h3 {
   font-weight: bold;
   color: white;
+}
+
+.update-wrapper .loader {
+  margin: 0 auto;
+
+  border: 3px solid greenyellow;
+
+  border-right-color: greenyellow;
+  border-left-color: greenyellow;
+
+  border-left-color: transparent;
+
+  border-right-color: transparent;
+  height: 50px;
+
+  width: 50px;
+  border-radius: 60%;
+
+  animation: cssload-spin 800ms infinite linear;
+
+  -o-animation: cssload-spin 800ms infinite linear;
+
+  -ms-animation: cssload-spin 800ms infinite linear;
+
+  -webkit-animation: cssload-spin 800ms infinite linear;
+
+  -moz-animation: cssload-spin 800ms infinite linear;
 }

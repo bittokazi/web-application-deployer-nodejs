@@ -65,6 +65,7 @@ export default class ApplicationList extends Component {
                       <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Deploying</th>
                         <th>Deploy</th>
                         <th>Edit</th>
                       </tr>
@@ -75,6 +76,18 @@ export default class ApplicationList extends Component {
                           <tr>
                             <td>{application.id}</td>
                             <td>{application.name}</td>
+                            <td>
+                              {application.isDeploying && (
+                                <div
+                                  style={{
+                                    float: "left",
+                                    "margin-left": "14px",
+                                  }}
+                                  class="cssload-speeding-wheel"
+                                ></div>
+                              )}
+                              {!application.isDeploying && <>No</>}
+                            </td>
                             <td>
                               <Link
                                 to={`/dashboard/applications/deploy/${application.id}`}

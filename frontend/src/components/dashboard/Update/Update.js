@@ -96,7 +96,7 @@ export default class Update extends Component {
               <div class="row">
                 <div class="col-md-12">
                   <div class="white-box">
-                    <h5>Current Version: 1.0.8</h5>
+                    <h5>Current Version: 1.0.11</h5>
                     <br></br>
                     <button
                       class="btn btn-success waves-effect waves-light"
@@ -107,6 +107,7 @@ export default class Update extends Component {
                   </div>
                   <div class="update-wrapper" id="update-modal">
                     <div class="update-box">
+                      <div class="cssload-speeding-wheel loader"></div>
                       <h3>{this.state.updateMessage}</h3>
                     </div>
                   </div>
