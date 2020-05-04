@@ -218,12 +218,37 @@ export const deployApplication = (req, payload, id, success, error) => {
                 name: result[0].name,
               })
               .then((deployment) => {
-                sendNotification(
-                  "Deployment Success",
-                  result[0].name + " deployment successful",
-                  "https://prisminfosys.com/images/deployment.png",
-                  ""
-                );
+                if (data.toString() == "0") {
+                  sendNotification(
+                    "Deployment Success",
+                    result[0].name + " deployment successful",
+                    "https://prisminfosys.com/images/deployment.png",
+                    ""
+                  );
+                  req.socketIo.emit("chat.message.deploy", {
+                    message:
+                      "Deploy>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<SUCCESS",
+                    name: result[0].name,
+                    type: "deployment-success",
+                  });
+                } else {
+                  sendNotification(
+                    "Deployment Failed",
+                    result[0].name + " deployment failed",
+                    "https://prisminfosys.com/images/deployment.png",
+                    ""
+                  );
+                  req.socketIo.emit("chat.message.deploy", {
+                    message:
+                      "Deploy>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<Failed",
+                    name: result[0].name,
+                    type: "deployment-success",
+                  });
+                }
                 req.socketIo.emit("chat.message.deploy", {
                   message:
                     "Deploy>>>>>>>>>>>>" +
@@ -294,50 +319,53 @@ export const githubDeployApplication = (req, success, error) => {
 
 export const selfDeployerService = (req, success, error) => {
   console.log("self deploy...");
-  sendNotification("System Update", "System update Started", "https://prisminfosys.com/images/deployment.png", "").finally(
-    () => {
-      let bash = exec(
-        "cp " +
-          __dirname +
-          "/../../scripts/self_deploy.sh " +
-          __dirname +
-          "/../../../self_deploy.sh && cp " +
-          __dirname +
-          "/../../.env " +
-          __dirname +
-          "/../../../.env && cp " +
-          __dirname +
-          "/../../scripts/self_deploy.js " +
-          __dirname +
-          "/../../../self_deploy.js && cd ../ && node self_deploy.js"
-      );
-      bash.on("exit", function (data) {
-        console.log("exit", data.toString());
-        req.socketIo.emit("chat.message.deploy", {
-          message: "exit: " + data.toString(),
-          name: "deployer",
-          type: "self-deployment",
-        });
+  sendNotification(
+    "System Update",
+    "System update Started",
+    "https://prisminfosys.com/images/deployment.png",
+    ""
+  ).finally(() => {
+    let bash = exec(
+      "cp " +
+        __dirname +
+        "/../../scripts/self_deploy.sh " +
+        __dirname +
+        "/../../../self_deploy.sh && cp " +
+        __dirname +
+        "/../../.env " +
+        __dirname +
+        "/../../../.env && cp " +
+        __dirname +
+        "/../../scripts/self_deploy.js " +
+        __dirname +
+        "/../../../self_deploy.js && cd ../ && node self_deploy.js"
+    );
+    bash.on("exit", function (data) {
+      console.log("exit", data.toString());
+      req.socketIo.emit("chat.message.deploy", {
+        message: "exit: " + data.toString(),
+        name: "deployer",
+        type: "self-deployment",
       });
-      bash.stderr.on("data", function (data) {
-        console.log("stderr", data.toString());
-        req.socketIo.emit("chat.message.deploy", {
-          message: "err> " + data.toString(),
-          name: "deployer",
-          type: "self-deployment",
-        });
+    });
+    bash.stderr.on("data", function (data) {
+      console.log("stderr", data.toString());
+      req.socketIo.emit("chat.message.deploy", {
+        message: "err> " + data.toString(),
+        name: "deployer",
+        type: "self-deployment",
       });
-      bash.stdout.on("data", function (data) {
-        console.log("stdout", data.toString());
-        req.socketIo.emit("chat.message.deploy", {
-          message: "log> " + data.toString(),
-          name: "deployer",
-          type: "self-deployment",
-        });
+    });
+    bash.stdout.on("data", function (data) {
+      console.log("stdout", data.toString());
+      req.socketIo.emit("chat.message.deploy", {
+        message: "log> " + data.toString(),
+        name: "deployer",
+        type: "self-deployment",
       });
-      success({});
-    }
-  );
+    });
+    success({});
+  });
 };
 
 function ensureExists(path, cb) {
