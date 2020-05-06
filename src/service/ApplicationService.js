@@ -250,14 +250,6 @@ export const deployApplication = (req, payload, id, success, error) => {
                   });
                 }
                 req.socketIo.emit("chat.message.deploy", {
-                  message:
-                    "Deploy>>>>>>>>>>>>" +
-                    result[0].name +
-                    "<<<<<<<<<<<<SUCCESS",
-                  name: result[0].name,
-                  type: "deployment-success",
-                });
-                req.socketIo.emit("chat.message.deploy", {
                   message: "Exit: " + data.toString(),
                   name: result[0].name,
                   type: "deployment-exit",
