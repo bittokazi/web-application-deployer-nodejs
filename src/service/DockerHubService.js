@@ -8,12 +8,15 @@ export const dockerCheckBuildStatus = (url) => {
           "Content-Type": "application/json",
         },
         uri: url,
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          state: "success",
+          context: "Deployed Successfully",
+        }),
         method: "POST",
       },
       (err, res, body) => {
         if (!err) {
-          return resolve(JSON.parse(body));
+          return resolve({});
         } else {
           return reject({
             error: "error occured",

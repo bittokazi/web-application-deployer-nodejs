@@ -325,28 +325,14 @@ export const dockerDeployApplication = (req, success, error) => {
           return;
         }
         if (req.param("secret") && req.param("secret") == result[0].secret) {
-          dockerCheckBuildStatus(req.body.callback_url)
-            .then((response) => {
-              if (response.state == "success") {
-                sendNotification(
-                  "Docker auto Deployment",
-                  result[0].name + " docker auto deployment started",
-                  "https://prisminfosys.com/images/deployment.png",
-                  ""
-                );
-                deployApplication(req, req.body, result[0].id, success, error);
-              } else {
-                sendNotification(
-                  "Docker Deployment Failed",
-                  result[0].name + " Docker deployment failed",
-                  "https://prisminfosys.com/images/deployment.png",
-                  ""
-                );
-              }
-            })
-            .catch((err) => {
-              error(err);
-            });
+          sendNotification(
+            "Docker auto Deployment",
+            result[0].name + " docker auto deployment started",
+            "https://prisminfosys.com/images/deployment.png",
+            ""
+          );
+          deployApplication(req, req.body, result[0].id, success, error);
+          dockerCheckBuildStatus(req.body.callback_url);
         } else error(err);
       })
       .catch((err) => {
