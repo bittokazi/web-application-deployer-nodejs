@@ -324,7 +324,7 @@ export const dockerDeployApplication = (req, success, error) => {
           error({ message: "not exist" });
           return;
         }
-        if (req.param("secret")) {
+        if (req.param("secret") && req.param("secret") == result[0].secret) {
           dockerCheckBuildStatus(req.body.callback_url).then(
             (response) => {
               if (response.state == "success") {
