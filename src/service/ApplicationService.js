@@ -349,27 +349,6 @@ export const dockerDeployApplication = (req, success, error) => {
             }
           );
         } else error(err);
-        if (
-          req.header("x-hub-signature") &&
-          req.header("x-hub-signature") != "null" &&
-          req.header("x-hub-signature") != ""
-        ) {
-          const signature = `sha1=${crypto
-            .createHmac("sha1", result[0].secret)
-            .update(JSON.stringify(req.body))
-            .digest("hex")}`;
-          if (req.headers["x-hub-signature"] === signature) {
-            if (req.body.ref === "refs/heads/master") {
-              sendNotification(
-                "Github auto Deployment",
-                result[0].name + " github auto deployment started",
-                "https://prisminfosys.com/images/deployment.png",
-                ""
-              );
-              deployApplication(req, req.body, result[0].id, success, error);
-            } else error(err);
-          } else error(err);
-        } else error(err);
       })
       .catch((err) => {
         error(err);
