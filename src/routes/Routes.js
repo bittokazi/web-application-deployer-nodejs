@@ -10,6 +10,7 @@ import authRoutes from "./Auth";
 import applicationRoutes from "./Application";
 import { SocketIoAccacher } from "../middlewares/SocketIoAccacher";
 import { githubDeployController } from "../controllers/GithubDeployController";
+import { dockerDeployController } from "../controllers/DockerDeployController";
 
 export const Routes = (app, socketIoCallback) => {
   app.get("/health", HelloWorld);
@@ -17,6 +18,11 @@ export const Routes = (app, socketIoCallback) => {
     "/github-deploy/:id",
     SocketIoAccacher(socketIoCallback),
     githubDeployController
+  );
+  app.post(
+    "/docker-deploy/:id/secret/:secret",
+    SocketIoAccacher(socketIoCallback),
+    dockerDeployController
   );
   app.use(
     "/api/users",

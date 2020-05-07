@@ -4,6 +4,7 @@ import { Config } from "./../config/Config";
 var exec = require("child_process").exec;
 import crypto from "crypto";
 import { sendNotification } from "./FirebaseService";
+import { dockerCheckBuildStatus } from "./DockerHubService";
 
 export const createApplication = (body, success, error) => {
   ensureExists(Config()._APPLICATION_FOLDER + "/" + body.name, function (err) {
@@ -281,6 +282,73 @@ export const githubDeployApplication = (req, success, error) => {
           error({ message: "not exist" });
           return;
         }
+        if (
+          req.header("x-hub-signature") &&
+          req.header("x-hub-signature") != "null" &&
+          req.header("x-hub-signature") != ""
+        ) {
+          const signature = `sha1=${crypto
+            .createHmac("sha1", result[0].secret)
+            .update(JSON.stringify(req.body))
+            .digest("hex")}`;
+          if (req.headers["x-hub-signature"] === signature) {
+            if (req.body.ref === "refs/heads/master") {
+              sendNotification(
+                "Github auto Deployment",
+                result[0].name + " github auto deployment started",
+                "https://prisminfosys.com/images/deployment.png",
+                ""
+              );
+              deployApplication(req, req.body, result[0].id, success, error);
+            } else error(err);
+          } else error(err);
+        } else error(err);
+      })
+      .catch((err) => {
+        error(err);
+      });
+  }
+};
+
+export const dockerDeployApplication = (req, success, error) => {
+  if (req.param("id")) {
+    db.application
+      .findAll({
+        where: {
+          name: req.param("id"),
+        },
+        order: [["id", "DESC"]],
+      })
+      .then((result) => {
+        if (result.length == 0) {
+          error({ message: "not exist" });
+          return;
+        }
+        if (req.param("secret")) {
+          dockerCheckBuildStatus(req.body.callback_url).then(
+            (response) => {
+              if (response.state == "success") {
+                sendNotification(
+                  "Docker auto Deployment",
+                  result[0].name + " docker auto deployment started",
+                  "https://prisminfosys.com/images/deployment.png",
+                  ""
+                );
+                deployApplication(req, req.body, result[0].id, success, error);
+              } else {
+                sendNotification(
+                  "Docker Deployment Failed",
+                  result[0].name + " Docker deployment failed",
+                  "https://prisminfosys.com/images/deployment.png",
+                  ""
+                );
+              }
+            },
+            (err) => {
+              error(err);
+            }
+          );
+        } else error(err);
         if (
           req.header("x-hub-signature") &&
           req.header("x-hub-signature") != "null" &&
