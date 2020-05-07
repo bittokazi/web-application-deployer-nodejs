@@ -325,8 +325,8 @@ export const dockerDeployApplication = (req, success, error) => {
           return;
         }
         if (req.param("secret") && req.param("secret") == result[0].secret) {
-          dockerCheckBuildStatus(req.body.callback_url).then(
-            (response) => {
+          dockerCheckBuildStatus(req.body.callback_url)
+            .then((response) => {
               if (response.state == "success") {
                 sendNotification(
                   "Docker auto Deployment",
@@ -343,11 +343,10 @@ export const dockerDeployApplication = (req, success, error) => {
                   ""
                 );
               }
-            },
-            (err) => {
+            })
+            .catch((err) => {
               error(err);
-            }
-          );
+            });
         } else error(err);
       })
       .catch((err) => {
