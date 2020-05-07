@@ -331,6 +331,11 @@ export const dockerDeployApplication = (req, success, error) => {
             "https://prisminfosys.com/images/deployment.png",
             ""
           );
+          req.socketIo.emit("chat.message.deploy", {
+            message: "log> " + req.body.callback_url,
+            name: result[0].name,
+            type: "deployment-log",
+          });
           deployApplication(req, req.body, result[0].id, success, error);
           dockerCheckBuildStatus(req.body.callback_url);
         } else error(err);
