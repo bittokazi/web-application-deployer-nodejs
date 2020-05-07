@@ -24,6 +24,7 @@ export const getAllUsers = (req, success, error) => {
 export const addUserProtected = (payload, success, error) => {
   payload.role = UserRole.superAdmin;
   payload.changePassword = true;
+  payload.password = bcrypt.hashSync(payload.password, 10);
   db.user
     .create(payload)
     .then((result) => {
