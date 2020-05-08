@@ -99,7 +99,7 @@ export default class Update extends Component {
                     <h5>Current Version: 1.0.11</h5>
                     <br></br>
                     <button
-                      class="btn btn-success waves-effect waves-light"
+                      class="btn btn-info waves-effect waves-light"
                       onClick={() => this.deploy()}
                     >
                       Update System

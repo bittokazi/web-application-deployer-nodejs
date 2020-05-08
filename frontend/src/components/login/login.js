@@ -69,6 +69,7 @@ export default function Login() {
 
   return (
     <>
+      <div class="bg-animated"></div>
       <form class="login-form-wrapper" onSubmit={loginUser}>
         <div class="login">
           <div class="login-screen">

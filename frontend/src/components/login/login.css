@@ -16,7 +16,7 @@ body {
   width: 100%;
   top: 0;
   left: 0;
-  background: #fa7035;
+  background: rgba(250, 112, 53, 0.7);
 }
 .login-form-wrapper .login {
   margin: 20px auto;
@@ -86,4 +86,44 @@ body {
   color: #444;
   display: block;
   margin-top: 12px;
+}
+
+.bg-animated {
+  background-image: url("/static_dash/images/end-user.jpg");
+  background-position: 0 0;
+  background-repeat: repeat;
+  -webkit-animation: sidedownscroll 30s linear infinite;
+  animation: sidedownscroll 30s linear infinite;
+  background-size: auto;
+  background-position: 0 0;
+  background-repeat: repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  text-align: center;
+  box-sizing: border-box;
+  will-change: background-position;
+}
+
+@-webkit-keyframes sidedownscroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -2000px 2000px;
+  }
+}
+
+@keyframes sidedownscroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -2000px 2000px;
+  }
 }

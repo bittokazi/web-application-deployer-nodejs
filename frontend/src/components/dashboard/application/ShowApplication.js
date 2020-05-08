@@ -117,7 +117,7 @@ export default class ShowApplication extends Component {
             <div class="col-md-12">
               <div class="white-box">
                 <button
-                  class="btn btn-success waves-effect waves-light"
+                  class="btn btn-info waves-effect waves-light"
                   style={{ float: "left" }}
                   onClick={() => this.deploy()}
                   disabled={this.state.isDeploying}
