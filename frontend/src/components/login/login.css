@@ -16,7 +16,7 @@ body {
   width: 100%;
   top: 0;
   left: 0;
-  background: #3498db;
+  background: #fa7035;
 }
 .login-form-wrapper .login {
   margin: 20px auto;
@@ -56,13 +56,13 @@ body {
 }
 
 .login-form-wrapper input:focus {
-  border: 2px solid #3498db;
+  border: 2px solid #bf3a14;
   box-shadow: none;
 }
 
 .login-form-wrapper .btn {
   border: 2px solid transparent;
-  background: #3498db;
+  background: #fa7035;
   color: #ffffff;
   font-size: 16px;
   line-height: 25px;
@@ -78,7 +78,7 @@ body {
 }
 
 .login-form-wrapper .btn:hover {
-  background-color: #2980b9;
+  background-color: #bf3a14;
 }
 
 .login-form-wrapper .login-link {

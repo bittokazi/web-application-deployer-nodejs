@@ -4,7 +4,7 @@
 }
 
 #side-menu > li > a.activeClass {
-  background-color: #13dafe !important;
+  background-color: #fa7035 !important;
   color: #fff !important;
 }
 
@@ -13,7 +13,7 @@
 }
 
 #side-menu ul > li > a.activeClass {
-  color: #13dafe;
+  color: #fa7035;
   background: white;
 }
 
