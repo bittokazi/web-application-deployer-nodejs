@@ -89,7 +89,7 @@ body {
 }
 
 .bg-animated {
-  background-image: url("/static_dash/images/end-user.jpg");
+  background-image: url("/static_dash/images/end-user.png");
   background-position: 0 0;
   background-repeat: repeat;
   -webkit-animation: sidedownscroll 30s linear infinite;
