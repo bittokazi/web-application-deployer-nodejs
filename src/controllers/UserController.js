@@ -61,7 +61,7 @@ export const whoAmI = (req, res, next) => {
     lastname: req.user.lastname,
     role: req.user.role,
     tenant: req.tenant ? req.tenant.key : "",
-    image: `http://www.gravatar.com/avatar/${md5(req.user.email)}?d=identicon`,
+    image: `https://www.gravatar.com/avatar/${md5(req.user.email)}?d=identicon`,
     access: UserAccess(req.user.role, req),
   });
 };
