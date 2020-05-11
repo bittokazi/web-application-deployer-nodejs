@@ -347,7 +347,11 @@ export const dockerDeployApplication = (req, success, error) => {
             ""
           );
           req.socketIo.emit("chat.message.deploy", {
-            message: "log> " + req.body.callback_url,
+            message:
+              "log> " +
+              req.body.callback_url +
+              " - Tag - " +
+              req.body.push_data.tag,
             name: result[0].name,
             type: "deployment-log",
           });
