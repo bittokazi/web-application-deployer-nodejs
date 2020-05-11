@@ -146,7 +146,14 @@ export const showApplication = (id, success, error) => {
     });
 };
 
-export const deployApplication = (req, payload, id, success, error) => {
+export const deployApplication = (
+  req,
+  payload,
+  id,
+  success,
+  error,
+  args = null
+) => {
   db.application
     .findAll({
       where: {
@@ -187,7 +194,11 @@ export const deployApplication = (req, payload, id, success, error) => {
           );
 
           let bash = exec(
-            "cd " + result[0].location + " && bash " + result[0].script
+            "cd " +
+              result[0].location +
+              " && bash " +
+              result[0].script +
+              (args ? " " + args : "")
           );
           bash.stdout.on("data", function (data) {
             req.socketIo.emit("chat.message.deploy", {
@@ -324,7 +335,11 @@ export const dockerDeployApplication = (req, success, error) => {
           error({ message: "not exist" });
           return;
         }
-        if (req.param("secret") && req.param("secret") == result[0].secret) {
+        if (
+          req.param("secret") &&
+          req.param("secret") == result[0].secret &&
+          req.body.push_data.tag != "latest"
+        ) {
           sendNotification(
             "Docker auto Deployment",
             result[0].name + " docker auto deployment started",
@@ -336,7 +351,14 @@ export const dockerDeployApplication = (req, success, error) => {
             name: result[0].name,
             type: "deployment-log",
           });
-          deployApplication(req, req.body, result[0].id, success, error);
+          deployApplication(
+            req,
+            req.body,
+            result[0].id,
+            success,
+            error,
+            req.body.push_data.tag
+          );
           dockerCheckBuildStatus(req.body.callback_url);
         } else error(err);
       })
