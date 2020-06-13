@@ -95,13 +95,11 @@ export default class ShowApplication extends Component {
     console.log(message);
     if (this.state.application.name == message.name) {
       if (message.type == "deployment-start") {
+        this.state.application.isOnline = false;
         this.setState({
           isDeploying: true,
+          application: this.state.application,
         });
-        let self = this;
-        setTimeout(() => {
-          if (self) self.getHealthStatus(self.state.application.healthUrl);
-        }, 5000);
       }
       if (
         message.type == "deployment-success" ||
