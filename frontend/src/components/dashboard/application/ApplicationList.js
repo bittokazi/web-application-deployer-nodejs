@@ -39,10 +39,17 @@ export default class ApplicationList extends Component {
         method: "GET",
       }).then((response) => {
         if (response.ok) {
-          this.state.applications[index].isOnline = true;
-          this.setState({
-            applications: this.state.applications,
-          });
+          if (response.status >= 200 || response.status >= 300) {
+            this.state.applications[index].isOnline = true;
+            this.setState({
+              applications: this.state.applications,
+            });
+          } else {
+            this.state.applications[index].isOnline = false;
+            this.setState({
+              applications: this.state.applications,
+            });
+          }
         } else {
           this.state.applications[index].isOnline = false;
           this.setState({
