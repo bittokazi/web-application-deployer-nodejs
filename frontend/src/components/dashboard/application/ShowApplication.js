@@ -98,7 +98,10 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: true,
         });
-        this.getHealthStatus(this.state.application.healthUrl);
+        let self = this;
+        setTimeout(() => {
+          if (self) self.getHealthStatus(self.state.application.healthUrl);
+        }, 7000);
       }
       if (
         message.type == "deployment-success" ||
@@ -109,8 +112,8 @@ export default class ShowApplication extends Component {
         });
         let self = this;
         setTimeout(() => {
-          if (self) self.getHealthStatus(self.state.application.healthUrl);
-        }, 7000);
+          if (self) self.getAllDeployments(self.state.application.name);
+        }, 15000);
       }
       this.setState({
         messages: [...this.state.messages, message.message],
@@ -119,9 +122,6 @@ export default class ShowApplication extends Component {
         { scrollTop: $("#messageList").prop("scrollHeight") },
         1
       );
-      setTimeout(() => {
-        if (self) self.getAllDeployments(self.state.application.name);
-      }, 15000);
     }
   };
 
