@@ -12,6 +12,9 @@ export default class AddApplication extends Component {
       branch: "",
       script: "",
       env: "",
+      healthUrl: "",
+      startCommand: "",
+      stopCommand: "",
     };
   }
 
@@ -36,6 +39,9 @@ export default class AddApplication extends Component {
           script: this.state.script,
           environments: this.state.env,
           isDeploying: false,
+          healthUrl: this.state.healthUrl,
+          startCommand: this.state.startCommand,
+          stopCommand: this.state.stopCommand,
         },
       },
       (response) => {
@@ -62,6 +68,9 @@ export default class AddApplication extends Component {
           branch: response.data.branch,
           script: response.data.script,
           env: response.data.env,
+          healthUrl: response.data.healthUrl,
+          startCommand: response.data.startCommand,
+          stopCommand: response.data.stopCommand,
         });
       },
       (error) => {
@@ -122,6 +131,19 @@ export default class AddApplication extends Component {
                     </div>
                   </div>
                   <div class="form-group">
+                    <label class="col-md-12">Health Check URL</label>
+                    <div class="col-md-12">
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        value={this.state.healthUrl}
+                        onChange={(event) =>
+                          this.updateForm(event, "healthUrl")
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <label class="col-md-12">Script</label>
                     <div class="col-md-12">
                       <textarea
@@ -141,6 +163,32 @@ export default class AddApplication extends Component {
                         value={this.state.env}
                         onChange={(event) => this.updateForm(event, "env")}
                       ></textarea>
+                    </div>
+                  </div>
+                  {/* <div class="form-group">
+                    <label class="col-md-12">Start Command</label>
+                    <div class="col-md-12">
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        value={this.state.startCommand}
+                        onChange={(event) =>
+                          this.updateForm(event, "startCommand")
+                        }
+                      />
+                    </div>
+                  </div> */}
+                  <div class="form-group">
+                    <label class="col-md-12">Stop Command</label>
+                    <div class="col-md-12">
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        value={this.state.stopCommand}
+                        onChange={(event) =>
+                          this.updateForm(event, "stopCommand")
+                        }
+                      />
                     </div>
                   </div>
                   <button

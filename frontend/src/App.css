@@ -474,3 +474,24 @@ input[type="search"]::-webkit-search-decoration {
   font-size: 22px;
   line-height: 0;
 }
+
+.health-error {
+  background: orange;
+  height: 15px;
+  width: 15px;
+  border-radius: 50px;
+}
+
+.health-online {
+  background: lightgreen;
+  height: 15px;
+  width: 15px;
+  border-radius: 50px;
+}
+
+.health-offline {
+  background: red;
+  height: 15px;
+  width: 15px;
+  border-radius: 50px;
+}
