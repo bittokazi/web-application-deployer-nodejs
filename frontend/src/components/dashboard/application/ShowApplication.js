@@ -98,6 +98,7 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: true,
         });
+        let self = this;
         setTimeout(() => {
           if (self) self.getHealthStatus(self.state.application.healthUrl);
         }, 5000);
