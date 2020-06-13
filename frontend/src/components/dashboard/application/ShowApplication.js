@@ -177,7 +177,7 @@ export default class ShowApplication extends Component {
                     "margin-left": "7px",
                   }}
                 >
-                  Status&nbsp;&nbsp;|&nbsp;
+                  Status&nbsp;&nbsp;| &nbsp;
                 </div>
                 {this.state.application &&
                   this.state.application.isOnline != undefined &&
