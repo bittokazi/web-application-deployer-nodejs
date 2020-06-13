@@ -49,10 +49,17 @@ export default class ShowApplication extends Component {
         method: "GET",
       }).then((response) => {
         if (response.ok) {
-          this.state.application.isOnline = true;
-          this.setState({
-            application: this.state.application,
-          });
+          if (response.status >= 200 || response.status >= 300) {
+            this.state.application.isOnline = true;
+            this.setState({
+              application: this.state.application,
+            });
+          } else {
+            this.state.application.isOnline = false;
+            this.setState({
+              application: this.state.application,
+            });
+          }
         } else {
           this.state.application.isOnline = false;
           this.setState({
@@ -91,7 +98,10 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: true,
         });
-        this.getHealthStatus(this.state.application.healthUrl);
+        let self = this;
+        setTimeout(() => {
+          if (self) self.getHealthStatus(self.state.application.healthUrl);
+        }, 7000);
       }
       if (
         message.type == "deployment-success" ||
@@ -100,9 +110,10 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: false,
         });
+        let self = this;
         setTimeout(() => {
-          this.getHealthStatus(this.state.application.healthUrl);
-        }, 7000);
+          if (self) self.getAllDeployments(self.state.application.name);
+        }, 15000);
       }
       this.setState({
         messages: [...this.state.messages, message.message],
@@ -111,9 +122,6 @@ export default class ShowApplication extends Component {
         { scrollTop: $("#messageList").prop("scrollHeight") },
         1
       );
-      setTimeout(() => {
-        this.getAllDeployments(this.state.application.name);
-      }, 15000);
     }
   };
 
