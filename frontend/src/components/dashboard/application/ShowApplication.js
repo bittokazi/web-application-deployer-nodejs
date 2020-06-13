@@ -98,10 +98,9 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: true,
         });
-        let self = this;
         setTimeout(() => {
           if (self) self.getHealthStatus(self.state.application.healthUrl);
-        }, 7000);
+        }, 5000);
       }
       if (
         message.type == "deployment-success" ||
@@ -112,8 +111,9 @@ export default class ShowApplication extends Component {
         });
         let self = this;
         setTimeout(() => {
-          if (self) self.getAllDeployments(self.state.application.name);
+          if (self) self.getHealthStatus(self.state.application.healthUrl);
         }, 15000);
+        this.getAllDeployments(this.state.application.name);
       }
       this.setState({
         messages: [...this.state.messages, message.message],
