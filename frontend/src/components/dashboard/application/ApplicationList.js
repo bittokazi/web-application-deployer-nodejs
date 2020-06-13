@@ -22,11 +22,35 @@ export default class ApplicationList extends Component {
       },
       (response) => {
         this.setState({ applications: response.data });
+        response.data.forEach((application, index) => {
+          if (application.healthUrl)
+            this.getHealthStatus(index, application.healthUrl);
+        });
       },
       (error) => {
         console.log(error.response);
       }
     );
+  }
+
+  getHealthStatus(index, url) {
+    if (url && url != "") {
+      fetch(`${url}`, {
+        method: "GET",
+      }).then((response) => {
+        if (response.ok) {
+          this.state.applications[index].isOnline = true;
+          this.setState({
+            applications: this.state.applications,
+          });
+        } else {
+          this.state.applications[index].isOnline = false;
+          this.setState({
+            applications: this.state.applications,
+          });
+        }
+      });
+    }
   }
 
   deploy = (id) => {
@@ -65,6 +89,7 @@ export default class ApplicationList extends Component {
                       <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Health Status</th>
                         <th>Deploying</th>
                         <th>Deploy</th>
                         <th>Edit</th>
@@ -76,6 +101,19 @@ export default class ApplicationList extends Component {
                           <tr>
                             <td>{application.id}</td>
                             <td>{application.name}</td>
+                            <td>
+                              {application.isOnline != undefined &&
+                                application.isOnline && (
+                                  <div class="health-online"></div>
+                                )}
+                              {application.isOnline != undefined &&
+                                !application.isOnline && (
+                                  <div class="health-offline"></div>
+                                )}
+                              {application.isOnline == undefined && (
+                                <div class="health-error"></div>
+                              )}
+                            </td>
                             <td>
                               {application.isDeploying && (
                                 <div

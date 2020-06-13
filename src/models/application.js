@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
       branch: DataTypes.STRING,
       environments: DataTypes.STRING,
       isDeploying: DataTypes.BOOLEAN,
+      healthUrl: DataTypes.STRING,
+      startCommand: DataTypes.STRING,
+      stopCommand: DataTypes.STRING,
     },
     {}
   );

@@ -137,9 +137,270 @@ export const showApplication = (id, success, error) => {
             script: data,
             env: _data,
             isDeploying: result[0].isDeploying,
+            healthUrl: result[0].healthUrl,
+            startCommand: result[0].startCommand,
+            stopCommand: result[0].stopCommand,
           });
         });
       });
+    })
+    .catch((err) => {
+      error(err);
+    });
+};
+
+export const startApplication = (
+  req,
+  payload,
+  id,
+  success,
+  error,
+  args = null
+) => {
+  db.application
+    .findAll({
+      where: {
+        id: id,
+      },
+      order: [["id", "DESC"]],
+    })
+    .then((result) => {
+      if (result.length == 0) {
+        error({ message: "not exist" });
+        return;
+      }
+      if (result[0].isDeploying) {
+        error({ message: "Another Deployment on progress" });
+        return;
+      }
+      db.application
+        .update(
+          { isDeploying: true },
+          {
+            where: {
+              id: result[0].id,
+            },
+          }
+        )
+        .then((__result) => {
+          req.socketIo.emit("chat.message.deploy", {
+            message: "Initiated Deployment for " + result[0].name,
+            name: result[0].name,
+            type: "deployment-start",
+          });
+
+          sendNotification(
+            "Deployment Started",
+            result[0].name + " deployment started",
+            "https://prisminfosys.com/images/deployment.png",
+            ""
+          );
+
+          let bash = exec(
+            "cd " + result[0].location + " && " + result[0].startCommand
+          );
+          bash.stdout.on("data", function (data) {
+            req.socketIo.emit("chat.message.deploy", {
+              message: "log> " + data.toString(),
+              name: result[0].name,
+              type: "deployment-log",
+            });
+          });
+          bash.stderr.on("data", function (data) {
+            req.socketIo.emit("chat.message.deploy", {
+              message: "Error> " + data.toString(),
+              name: result[0].name,
+              type: "deployment-err",
+            });
+          });
+          bash.on("exit", function (data) {
+            db.application
+              .update(
+                { isDeploying: false },
+                {
+                  where: {
+                    id: result[0].id,
+                  },
+                }
+              )
+              .then((_result) => {});
+            db.deployment
+              .create({
+                name: result[0].name,
+              })
+              .then((deployment) => {
+                if (data.toString() == "0") {
+                  sendNotification(
+                    "Deployment Success",
+                    result[0].name + " deployment successful",
+                    "https://prisminfosys.com/images/deployment.png",
+                    ""
+                  );
+                  req.socketIo.emit("chat.message.deploy", {
+                    message:
+                      "Deploy>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<SUCCESS",
+                    name: result[0].name,
+                    type: "deployment-success",
+                  });
+                } else {
+                  sendNotification(
+                    "Deployment Failed",
+                    result[0].name + " deployment failed",
+                    "https://prisminfosys.com/images/deployment.png",
+                    ""
+                  );
+                  req.socketIo.emit("chat.message.deploy", {
+                    message:
+                      "Deploy>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<Failed",
+                    name: result[0].name,
+                    type: "deployment-success",
+                  });
+                }
+                req.socketIo.emit("chat.message.deploy", {
+                  message: "Exit: " + data.toString(),
+                  name: result[0].name,
+                  type: "deployment-exit",
+                });
+              });
+          });
+          success(result);
+        })
+        .catch((err) => {
+          error(err);
+        });
+    })
+    .catch((err) => {
+      error(err);
+    });
+};
+
+export const stopApplication = (
+  req,
+  payload,
+  id,
+  success,
+  error,
+  args = null
+) => {
+  db.application
+    .findAll({
+      where: {
+        id: id,
+      },
+      order: [["id", "DESC"]],
+    })
+    .then((result) => {
+      if (result.length == 0) {
+        error({ message: "not exist" });
+        return;
+      }
+      if (result[0].isDeploying) {
+        error({ message: "Another Deployment on progress" });
+        return;
+      }
+      db.application
+        .update(
+          { isDeploying: true },
+          {
+            where: {
+              id: result[0].id,
+            },
+          }
+        )
+        .then((__result) => {
+          req.socketIo.emit("chat.message.deploy", {
+            message: "Initiated Shutdown for " + result[0].name,
+            name: result[0].name,
+            type: "deployment-start",
+          });
+
+          sendNotification(
+            "Shutdown Started",
+            result[0].name + " Shutdown started",
+            "https://prisminfosys.com/images/deployment.png",
+            ""
+          );
+
+          let bash = exec(
+            "cd " + result[0].location + " && " + result[0].stopCommand
+          );
+          bash.stdout.on("data", function (data) {
+            req.socketIo.emit("chat.message.deploy", {
+              message: "log> " + data.toString(),
+              name: result[0].name,
+              type: "deployment-log",
+            });
+          });
+          bash.stderr.on("data", function (data) {
+            req.socketIo.emit("chat.message.deploy", {
+              message: "Error> " + data.toString(),
+              name: result[0].name,
+              type: "deployment-err",
+            });
+          });
+          bash.on("exit", function (data) {
+            db.application
+              .update(
+                { isDeploying: false },
+                {
+                  where: {
+                    id: result[0].id,
+                  },
+                }
+              )
+              .then((_result) => {});
+            db.deployment
+              .create({
+                name: result[0].name,
+              })
+              .then((deployment) => {
+                if (data.toString() == "0") {
+                  sendNotification(
+                    "Shutdown Success",
+                    result[0].name + " Shutdown successful",
+                    "https://prisminfosys.com/images/deployment.png",
+                    ""
+                  );
+                  req.socketIo.emit("chat.message.deploy", {
+                    message:
+                      "Shutdown>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<SUCCESS",
+                    name: result[0].name,
+                    type: "deployment-success",
+                  });
+                } else {
+                  sendNotification(
+                    "Shutdown Failed",
+                    result[0].name + " Shutdown failed",
+                    "https://prisminfosys.com/images/deployment.png",
+                    ""
+                  );
+                  req.socketIo.emit("chat.message.deploy", {
+                    message:
+                      "Shutdown>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<Failed",
+                    name: result[0].name,
+                    type: "deployment-success",
+                  });
+                }
+                req.socketIo.emit("chat.message.deploy", {
+                  message: "Exit: " + data.toString(),
+                  name: result[0].name,
+                  type: "deployment-exit",
+                });
+              });
+          });
+          success(result);
+        })
+        .catch((err) => {
+          error(err);
+        });
     })
     .catch((err) => {
       error(err);

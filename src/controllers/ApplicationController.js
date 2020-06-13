@@ -5,6 +5,8 @@ import {
   deployApplication,
   showApplication,
   selfDeployerService,
+  startApplication,
+  stopApplication,
 } from "./../service/ApplicationService";
 import { getAllDeployments } from "../service/DeploymentService";
 
@@ -58,6 +60,34 @@ export const updateApplicationController = (req, res, next) => {
 
 export const deployApplicationCon = (req, res, next) => {
   deployApplication(
+    req,
+    req.body,
+    req.param("id"),
+    (result) => {
+      res.status(200).json(result);
+    },
+    (error) => {
+      res.status(200).json(error);
+    }
+  );
+};
+
+export const startApplicationCon = (req, res, next) => {
+  startApplication(
+    req,
+    req.body,
+    req.param("id"),
+    (result) => {
+      res.status(200).json(result);
+    },
+    (error) => {
+      res.status(200).json(error);
+    }
+  );
+};
+
+export const stopApplicationCon = (req, res, next) => {
+  stopApplication(
     req,
     req.body,
     req.param("id"),

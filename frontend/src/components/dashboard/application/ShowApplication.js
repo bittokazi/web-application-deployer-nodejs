@@ -6,6 +6,7 @@ import { UserInfoContext } from "./../../../providers/UserInfoProvider";
 import Moment from "react-moment";
 
 let $ = window["$"];
+let check = false;
 
 export default class ShowApplication extends Component {
   static contextType = UserInfoContext;
@@ -34,12 +35,46 @@ export default class ShowApplication extends Component {
           application: response.data,
           isDeploying: response.data.isDeploying,
         });
+        if (response.data.isDeploying) {
+          check = true;
+        }
         this.getAllDeployments(response.data.name);
+        this.getHealthStatus(response.data.healthUrl);
       },
       (error) => {
         console.log(error.response);
       }
     );
+  }
+
+  getHealthStatus(url) {
+    if (url && url != "") {
+      fetch(`${url}`, {
+        method: "GET",
+      }).then((response) => {
+        if (response.ok) {
+          this.state.application.isOnline = true;
+          this.setState({
+            application: this.state.application,
+          });
+        } else {
+          this.state.application.isOnline = false;
+          this.setState({
+            application: this.state.application,
+          });
+        }
+        this.checkStatus();
+      });
+    }
+  }
+
+  checkStatus() {
+    let self = this;
+    if (check) {
+      setTimeout(() => {
+        if (self) self.getHealthStatus(this.state.application.healthUrl);
+      }, 5000);
+    }
   }
 
   getAllDeployments = (name) => {
@@ -61,6 +96,7 @@ export default class ShowApplication extends Component {
 
   componentWillUnmount() {
     this.context.chat.setOnMessageReceive(null);
+    check = false;
   }
 
   onNewMessageReceived = (message) => {
@@ -70,6 +106,8 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: true,
         });
+        check = true;
+        this.checkStatus();
       }
       if (
         message.type == "deployment-success" ||
@@ -78,6 +116,7 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: false,
         });
+        check = false;
       }
       this.setState({
         messages: [...this.state.messages, message.message],
@@ -103,6 +142,32 @@ export default class ShowApplication extends Component {
     );
   };
 
+  startApp = () => {
+    ApiCall().authorized(
+      {
+        method: "GET",
+        url: "/applications/" + this.props.match.params.id + "/deploy",
+      },
+      (response) => {},
+      (error) => {
+        console.log(error.response);
+      }
+    );
+  };
+
+  stopApp = () => {
+    ApiCall().authorized(
+      {
+        method: "GET",
+        url: "/applications/" + this.props.match.params.id + "/deploy/stop",
+      },
+      (response) => {},
+      (error) => {
+        console.log(error.response);
+      }
+    );
+  };
+
   render() {
     return (
       <AuthComponent authSuccess={() => this.authSuccess()}>
@@ -116,9 +181,60 @@ export default class ShowApplication extends Component {
           <div class="row">
             <div class="col-md-12">
               <div class="white-box">
+                <div
+                  style={{
+                    float: "left",
+                    "margin-top": "6px",
+                    "font-weight": "bold",
+                    "margin-left": "7px",
+                  }}
+                >
+                  Status&nbsp;&nbsp;|&nbsp;
+                </div>
+                {this.state.application &&
+                  this.state.application.isOnline != undefined &&
+                  this.state.application.isOnline && (
+                    <div
+                      class="health-online"
+                      style={{
+                        float: "left",
+                        "margin-top": "10px",
+                        "margin-left": "4px",
+                      }}
+                    ></div>
+                  )}
+                {this.state.application &&
+                  this.state.application.isOnline != undefined &&
+                  !this.state.application.isOnline && (
+                    <div
+                      class="health-offline"
+                      style={{
+                        float: "left",
+                        "margin-top": "10px",
+                      }}
+                    ></div>
+                  )}
+                {this.state.application &&
+                  this.state.application.isOnline == undefined && (
+                    <div
+                      class="health-error"
+                      style={{
+                        float: "left",
+                        "margin-top": "10px",
+                      }}
+                    ></div>
+                  )}
+                <button
+                  class="btn btn-danger waves-effect waves-light"
+                  style={{ float: "right", "margin-right": "15px" }}
+                  onClick={() => this.stopApp()}
+                  disabled={this.state.isDeploying}
+                >
+                  Stop Application
+                </button>
                 <button
                   class="btn btn-info waves-effect waves-light"
-                  style={{ float: "left" }}
+                  style={{ float: "right", "margin-right": "15px" }}
                   onClick={() => this.deploy()}
                   disabled={this.state.isDeploying}
                 >
@@ -126,7 +242,7 @@ export default class ShowApplication extends Component {
                 </button>
                 {this.state.isDeploying && (
                   <div
-                    style={{ float: "left", "margin-left": "14px" }}
+                    style={{ float: "right", "margin-right": "15px" }}
                     class="cssload-speeding-wheel"
                   ></div>
                 )}
