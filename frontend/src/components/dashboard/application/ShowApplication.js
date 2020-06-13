@@ -6,7 +6,6 @@ import { UserInfoContext } from "./../../../providers/UserInfoProvider";
 import Moment from "react-moment";
 
 let $ = window["$"];
-let check = false;
 
 export default class ShowApplication extends Component {
   static contextType = UserInfoContext;
@@ -35,9 +34,6 @@ export default class ShowApplication extends Component {
           application: response.data,
           isDeploying: response.data.isDeploying,
         });
-        if (response.data.isDeploying) {
-          check = true;
-        }
         this.getAllDeployments(response.data.name);
         this.getHealthStatus(response.data.healthUrl);
       },
@@ -63,17 +59,7 @@ export default class ShowApplication extends Component {
             application: this.state.application,
           });
         }
-        this.checkStatus();
       });
-    }
-  }
-
-  checkStatus() {
-    let self = this;
-    if (check) {
-      setTimeout(() => {
-        if (self) self.getHealthStatus(this.state.application.healthUrl);
-      }, 5000);
     }
   }
 
@@ -96,7 +82,6 @@ export default class ShowApplication extends Component {
 
   componentWillUnmount() {
     this.context.chat.setOnMessageReceive(null);
-    check = false;
   }
 
   onNewMessageReceived = (message) => {
@@ -106,8 +91,7 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: true,
         });
-        check = true;
-        this.checkStatus();
+        this.getHealthStatus(this.state.application.healthUrl);
       }
       if (
         message.type == "deployment-success" ||
@@ -116,7 +100,9 @@ export default class ShowApplication extends Component {
         this.setState({
           isDeploying: false,
         });
-        check = false;
+        setTimeout(() => {
+          this.getHealthStatus(this.state.application.healthUrl);
+        }, 7000);
       }
       this.setState({
         messages: [...this.state.messages, message.message],
@@ -125,7 +111,9 @@ export default class ShowApplication extends Component {
         { scrollTop: $("#messageList").prop("scrollHeight") },
         1
       );
-      this.getAllDeployments(this.state.application.name);
+      setTimeout(() => {
+        this.getAllDeployments(this.state.application.name);
+      }, 15000);
     }
   };
 
