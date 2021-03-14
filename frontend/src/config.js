@@ -16,12 +16,20 @@ const prod = {
   CHAT_SERVER_URL: "http://localhost:8081",
 };
 
+const weallride = {
+  API_BASE_URL: "weallride.ga",
+  API_BASE_URL_PROTOCOL: "https://",
+  CHAT_SERVER_URL: "https://weallride.ga",
+};
+
 let config = {};
 
 if (process.env.REACT_APP_STAGE === "production") {
   config = prod;
 } else if (process.env.REACT_APP_STAGE === "staging") {
   config = stage;
+} else if (process.env.REACT_APP_STAGE === "weallride") {
+  config = weallride;
 } else {
   config = dev;
 }
