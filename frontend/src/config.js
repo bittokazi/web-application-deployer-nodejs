@@ -17,9 +17,9 @@ const prod = {
 };
 
 const weallride = {
-  API_BASE_URL: "weallride.ga",
+  API_BASE_URL: "deploy.weallride.org",
   API_BASE_URL_PROTOCOL: "https://",
-  CHAT_SERVER_URL: "https://weallride.ga",
+  CHAT_SERVER_URL: "https://deploy.weallride.org",
 };
 
 let config = {};
