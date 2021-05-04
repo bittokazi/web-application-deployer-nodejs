@@ -644,7 +644,9 @@ export const selfDeployerService = (req, success, error) => {
     let bash = exec(
       "cp " +
         __dirname +
-        "/../../scripts/self_deploy.sh " +
+        "/../../scripts/" +
+        Config()._SELF_DEPLOY_SCRIPT +
+        ".sh " +
         __dirname +
         "/../../../self_deploy.sh && cp " +
         __dirname +

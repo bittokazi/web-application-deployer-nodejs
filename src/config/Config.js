@@ -11,6 +11,7 @@ export const Config = () => {
     _DEFAULT_OAUTH_CLIENT_ID: process.env._DEFAULT_OAUTH_CLIENT_ID,
     _DEFAULT_OAUTH_CLIENT_SECRET: process.env._DEFAULT_OAUTH_CLIENT_SECRET,
     _FCM_SERVER_KEY: process.env._FCM_SERVER_KEY,
+    _SELF_DEPLOY_SCRIPT: process.env._SELF_DEPLOY_SCRIPT,
   };
 };
 
