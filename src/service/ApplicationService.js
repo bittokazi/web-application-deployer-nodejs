@@ -564,7 +564,7 @@ export const githubDeployApplication = (req, success, error) => {
             .update(JSON.stringify(req.body))
             .digest("hex")}`;
           if (req.headers["x-hub-signature"] === signature) {
-            if (req.body.ref === "refs/heads/master") {
+            if (req.body.ref === "refs/heads/" + result[0].branch) {
               sendNotification(
                 "Github auto Deployment",
                 result[0].name + " github auto deployment started",
