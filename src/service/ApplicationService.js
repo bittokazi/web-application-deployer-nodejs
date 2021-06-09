@@ -203,6 +203,7 @@ const _startApplication = async (
       `POST /repos/${fullName}/deployments`,
       {
         ref: result[0].branch,
+        environment: result[0].name.toLowerCase(),
       }
     );
   }
@@ -711,13 +712,7 @@ export const githubDeployApplication = (req, success, error) => {
                 "https://prisminfosys.com/images/deployment.png",
                 ""
               );
-              createGithubDeployment(
-                req,
-                req.body,
-                result[0].id,
-                success,
-                error
-              );
+              createGithubDeployment(req, req.body, result[0], success, error);
             } else error(err);
           } else error(err);
         } else error(err);
@@ -731,7 +726,7 @@ export const githubDeployApplication = (req, success, error) => {
 const createGithubDeployment = async (
   req,
   payload,
-  id,
+  result,
   success,
   error,
   args = null,
@@ -748,13 +743,14 @@ const createGithubDeployment = async (
       `POST /repos/${payload.repository.full_name}/deployments`,
       {
         ref: payload.after,
+        environment: result.name.toLowerCase(),
       }
     );
   }
   deployApplication(
     req,
     payload,
-    id,
+    result.id,
     success,
     error,
     args,
