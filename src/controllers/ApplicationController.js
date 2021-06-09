@@ -59,7 +59,7 @@ export const updateApplicationController = (req, res, next) => {
 };
 
 export const deployApplicationCon = (req, res, next) => {
-  deployApplication(
+  startApplication(
     req,
     req.body,
     req.param("id"),
