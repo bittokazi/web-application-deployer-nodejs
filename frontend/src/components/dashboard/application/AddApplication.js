@@ -15,6 +15,7 @@ export default class AddApplication extends Component {
       healthUrl: "",
       startCommand: "",
       stopCommand: "",
+      gitRepoLink: "",
     };
   }
 
@@ -42,6 +43,7 @@ export default class AddApplication extends Component {
           healthUrl: this.state.healthUrl,
           startCommand: this.state.startCommand,
           stopCommand: this.state.stopCommand,
+          gitRepoLink: this.state.gitRepoLink,
         },
       },
       (response) => {
@@ -93,6 +95,19 @@ export default class AddApplication extends Component {
                         class="form-control form-control-line"
                         value={this.state.secret}
                         onChange={(event) => this.updateForm(event, "secret")}
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-md-12">Repository Link</label>
+                    <div class="col-md-12">
+                      <input
+                        type="text"
+                        class="form-control form-control-line"
+                        value={this.state.gitRepoLink}
+                        onChange={(event) =>
+                          this.updateForm(event, "gitRepoLink")
+                        }
                       />
                     </div>
                   </div>

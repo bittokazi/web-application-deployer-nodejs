@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       healthUrl: DataTypes.STRING,
       startCommand: DataTypes.STRING,
       stopCommand: DataTypes.STRING,
+      gitRepoLink: DataTypes.STRING,
     },
     {}
   );
