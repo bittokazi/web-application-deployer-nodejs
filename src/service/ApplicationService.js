@@ -176,17 +176,7 @@ export const startApplication = async (
         return;
       }
 
-      _startApplication(
-        req,
-        payload,
-        id,
-        success,
-        error,
-        args,
-        result,
-        fullName,
-        deploymentPayload
-      );
+      _startApplication(req, payload, id, success, error, args, result);
     });
 };
 
@@ -197,9 +187,7 @@ const _startApplication = async (
   success,
   error,
   args = null,
-  result,
-  fullName = "",
-  deploymentPayload = null
+  result
 ) => {
   let githubDeploymentObject;
   let fullName = "";
