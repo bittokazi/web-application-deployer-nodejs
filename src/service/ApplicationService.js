@@ -507,6 +507,7 @@ export const deployApplication = (
                       `POST /repos/${payload.repository.full_name}/deployments/${deploymentPayload.data.id}/statuses`,
                       {
                         state: "success",
+                        auto_inactive: true,
                       }
                     );
                   }
@@ -538,6 +539,7 @@ export const deployApplication = (
                       `POST /repos/${payload.repository.full_name}/deployments/${deploymentPayload.data.id}/statuses`,
                       {
                         state: "failure",
+                        auto_inactive: true,
                       }
                     );
                   }
