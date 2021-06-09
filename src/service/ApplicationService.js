@@ -633,6 +633,7 @@ const createGithubDeployment = async (
   deployedFrom = "github"
 ) => {
   let githubDeploymentObject;
+  console.log(Config()._GITHUB_TOKEN);
   if (
     Config()._GITHUB_TOKEN &&
     Config()._GITHUB_TOKEN != "" &&
@@ -645,6 +646,7 @@ const createGithubDeployment = async (
         ref: payload.after,
       }
     );
+    console.log(githubDeploymentObject);
   }
   deployApplication(
     req,
