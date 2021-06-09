@@ -5,7 +5,7 @@ var exec = require("child_process").exec;
 import crypto from "crypto";
 import { sendNotification } from "./FirebaseService";
 import { dockerCheckBuildStatus } from "./DockerHubService";
-import Octokit from "@octokit/core";
+import { Octokit } from "@octokit/core";
 
 export const createApplication = (body, success, error) => {
   ensureExists(Config()._APPLICATION_FOLDER + "/" + body.name, function (err) {
@@ -633,7 +633,6 @@ const createGithubDeployment = async (
   deployedFrom = "github"
 ) => {
   let githubDeploymentObject;
-  console.log(Config()._GITHUB_TOKEN);
   if (
     Config()._GITHUB_TOKEN &&
     Config()._GITHUB_TOKEN != "" &&
@@ -646,7 +645,6 @@ const createGithubDeployment = async (
         ref: payload.after,
       }
     );
-    console.log(githubDeploymentObject);
   }
   deployApplication(
     req,
