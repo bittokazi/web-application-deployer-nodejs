@@ -12,6 +12,7 @@ export const Config = () => {
     _DEFAULT_OAUTH_CLIENT_SECRET: process.env._DEFAULT_OAUTH_CLIENT_SECRET,
     _FCM_SERVER_KEY: process.env._FCM_SERVER_KEY,
     _SELF_DEPLOY_SCRIPT: process.env._SELF_DEPLOY_SCRIPT,
+    _GITHUB_TOKEN: process.env._GITHUB_TOKEN,
   };
 };
 

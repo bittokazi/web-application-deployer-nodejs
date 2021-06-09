@@ -5,6 +5,7 @@ var exec = require("child_process").exec;
 import crypto from "crypto";
 import { sendNotification } from "./FirebaseService";
 import { dockerCheckBuildStatus } from "./DockerHubService";
+import Octokit from "@octokit/core";
 
 export const createApplication = (body, success, error) => {
   ensureExists(Config()._APPLICATION_FOLDER + "/" + body.name, function (err) {
@@ -413,7 +414,9 @@ export const deployApplication = (
   id,
   success,
   error,
-  args = null
+  args = null,
+  deployedFrom = "github",
+  deploymentPayload = null
 ) => {
   db.application
     .findAll({
@@ -492,6 +495,22 @@ export const deployApplication = (
               })
               .then((deployment) => {
                 if (data.toString() == "0") {
+                  if (
+                    Config()._GITHUB_TOKEN &&
+                    Config()._GITHUB_TOKEN != "" &&
+                    deployedFrom == "github"
+                  ) {
+                    const octokit = new Octokit({
+                      auth: Config()._GITHUB_TOKEN,
+                    });
+                    octokit.request(
+                      `POST /repos/${payload.repository.full_name}/deployments/${deploymentPayload.data.id}/statuses`,
+                      {
+                        state: "success",
+                      }
+                    );
+                  }
+
                   sendNotification(
                     "Deployment Success",
                     result[0].name + " deployment successful",
@@ -507,6 +526,22 @@ export const deployApplication = (
                     type: "deployment-success",
                   });
                 } else {
+                  if (
+                    Config()._GITHUB_TOKEN &&
+                    Config()._GITHUB_TOKEN != "" &&
+                    deployedFrom == "github"
+                  ) {
+                    const octokit = new Octokit({
+                      auth: Config()._GITHUB_TOKEN,
+                    });
+                    octokit.request(
+                      `POST /repos/${payload.repository.full_name}/deployments/${deploymentPayload.data.id}/statuses`,
+                      {
+                        state: "failure",
+                      }
+                    );
+                  }
+
                   sendNotification(
                     "Deployment Failed",
                     result[0].name + " deployment failed",
@@ -571,7 +606,13 @@ export const githubDeployApplication = (req, success, error) => {
                 "https://prisminfosys.com/images/deployment.png",
                 ""
               );
-              deployApplication(req, req.body, result[0].id, success, error);
+              createGithubDeployment(
+                req,
+                req.body,
+                result[0].id,
+                success,
+                error
+              );
             } else error(err);
           } else error(err);
         } else error(err);
@@ -580,6 +621,41 @@ export const githubDeployApplication = (req, success, error) => {
         error(err);
       });
   }
+};
+
+const createGithubDeployment = async (
+  req,
+  payload,
+  id,
+  success,
+  error,
+  args = null,
+  deployedFrom = "github"
+) => {
+  let githubDeploymentObject;
+  if (
+    Config()._GITHUB_TOKEN &&
+    Config()._GITHUB_TOKEN != "" &&
+    deployedFrom == "github"
+  ) {
+    const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
+    githubDeploymentObject = await octokit.request(
+      `POST /repos/${payload.repository.full_name}/deployments`,
+      {
+        ref: payload.after,
+      }
+    );
+  }
+  deployApplication(
+    req,
+    payload,
+    id,
+    success,
+    error,
+    args,
+    deployedFrom,
+    githubDeploymentObject
+  );
 };
 
 export const dockerDeployApplication = (req, success, error) => {
@@ -622,7 +698,9 @@ export const dockerDeployApplication = (req, success, error) => {
             result[0].id,
             success,
             error,
-            req.body.push_data.tag
+            req.body.push_data.tag,
+            "docker",
+            null
           );
           dockerCheckBuildStatus(req.body.callback_url);
         } else error(err);
