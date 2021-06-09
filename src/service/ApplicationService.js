@@ -270,7 +270,11 @@ export const __startApplication = (
           );
 
           let bash = exec(
-            "cd " + result[0].location + " && " + result[0].startCommand
+            "cd " +
+              result[0].location +
+              " && bash " +
+              result[0].script +
+              (args ? " " + args : "")
           );
           bash.stdout.on("data", function (data) {
             req.socketIo.emit("chat.message.deploy", {
