@@ -204,7 +204,6 @@ const _startApplication = async (
       {
         ref: result[0].branch,
         environment: result[0].name.toLowerCase(),
-        production_environment: false,
       }
     );
   }
@@ -749,7 +748,6 @@ const createGithubDeployment = async (
       {
         ref: payload.after,
         environment: result.name.toLowerCase(),
-        production_environment: false,
       }
     );
   }
