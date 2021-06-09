@@ -141,6 +141,7 @@ export const showApplication = (id, success, error) => {
             healthUrl: result[0].healthUrl,
             startCommand: result[0].startCommand,
             stopCommand: result[0].stopCommand,
+            gitRepoLink: result[0].gitRepoLink,
           });
         });
       });
@@ -150,13 +151,72 @@ export const showApplication = (id, success, error) => {
     });
 };
 
-export const startApplication = (
+export const startApplication = async (
   req,
   payload,
   id,
   success,
   error,
   args = null
+) => {
+  db.application
+    .findAll({
+      where: {
+        id: id,
+      },
+      order: [["id", "DESC"]],
+    })
+    .then((result) => {
+      if (result.length == 0) {
+        error({ message: "not exist" });
+        return;
+      }
+      if (result[0].isDeploying) {
+        error({ message: "Another Deployment on progress" });
+        return;
+      }
+
+      let githubDeploymentObject;
+      let fullName = "";
+      if (
+        Config()._GITHUB_TOKEN &&
+        Config()._GITHUB_TOKEN != "" &&
+        result[0].gitRepoLink.includes("github.com")
+      ) {
+        const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
+        const explode = result[0].gitRepoLink.split("/");
+        fullName =
+          explode[explode.length - 2] + "/" + explode[explode.length - 1];
+        githubDeploymentObject = await octokit.request(
+          `POST /repos/${fullName}/deployments`,
+          {
+            ref: result[0].branch,
+          }
+        );
+      }
+
+      _startApplication(
+        req,
+        payload,
+        id,
+        success,
+        error,
+        args,
+        fullName,
+        deploymentPayload
+      );
+    });
+};
+
+export const _startApplication = (
+  req,
+  payload,
+  id,
+  success,
+  error,
+  args = null,
+  fullName = "",
+  deploymentPayload = null
 ) => {
   db.application
     .findAll({
@@ -231,6 +291,22 @@ export const startApplication = (
               })
               .then((deployment) => {
                 if (data.toString() == "0") {
+                  if (
+                    Config()._GITHUB_TOKEN &&
+                    Config()._GITHUB_TOKEN != "" &&
+                    deploymentPayload
+                  ) {
+                    const octokit = new Octokit({
+                      auth: Config()._GITHUB_TOKEN,
+                    });
+                    octokit.request(
+                      `POST /repos/${fullName}/deployments/${deploymentPayload.data.id}/statuses`,
+                      {
+                        state: "success",
+                        auto_inactive: true,
+                      }
+                    );
+                  }
                   sendNotification(
                     "Deployment Success",
                     result[0].name + " deployment successful",
@@ -246,6 +322,22 @@ export const startApplication = (
                     type: "deployment-success",
                   });
                 } else {
+                  if (
+                    Config()._GITHUB_TOKEN &&
+                    Config()._GITHUB_TOKEN != "" &&
+                    deploymentPayload
+                  ) {
+                    const octokit = new Octokit({
+                      auth: Config()._GITHUB_TOKEN,
+                    });
+                    octokit.request(
+                      `POST /repos/${fullName}/deployments/${deploymentPayload.data.id}/statuses`,
+                      {
+                        state: "failure",
+                        auto_inactive: true,
+                      }
+                    );
+                  }
                   sendNotification(
                     "Deployment Failed",
                     result[0].name + " deployment failed",
