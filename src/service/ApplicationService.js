@@ -176,25 +176,6 @@ export const startApplication = async (
         return;
       }
 
-      let githubDeploymentObject;
-      let fullName = "";
-      if (
-        Config()._GITHUB_TOKEN &&
-        Config()._GITHUB_TOKEN != "" &&
-        result[0].gitRepoLink.includes("github.com")
-      ) {
-        const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
-        const explode = result[0].gitRepoLink.split("/");
-        fullName =
-          explode[explode.length - 2] + "/" + explode[explode.length - 1];
-        githubDeploymentObject = await octokit.request(
-          `POST /repos/${fullName}/deployments`,
-          {
-            ref: result[0].branch,
-          }
-        );
-      }
-
       _startApplication(
         req,
         payload,
@@ -202,13 +183,55 @@ export const startApplication = async (
         success,
         error,
         args,
+        result,
         fullName,
         deploymentPayload
       );
     });
 };
 
-export const _startApplication = (
+const _startApplication = async (
+  req,
+  payload,
+  id,
+  success,
+  error,
+  args = null,
+  result,
+  fullName = "",
+  deploymentPayload = null
+) => {
+  let githubDeploymentObject;
+  let fullName = "";
+  if (
+    Config()._GITHUB_TOKEN &&
+    Config()._GITHUB_TOKEN != "" &&
+    result[0].gitRepoLink.includes("github.com")
+  ) {
+    const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
+    const explode = result[0].gitRepoLink.split("/");
+    fullName = explode[explode.length - 2] + "/" + explode[explode.length - 1];
+    githubDeploymentObject = await octokit.request(
+      `POST /repos/${fullName}/deployments`,
+      {
+        ref: result[0].branch,
+      }
+    );
+  }
+
+  __startApplication(
+    req,
+    payload,
+    id,
+    success,
+    error,
+    args,
+    fullName,
+    deploymentPayload
+  );
+};
+
+export const __startApplication = (
   req,
   payload,
   id,
