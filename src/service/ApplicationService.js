@@ -215,7 +215,7 @@ const _startApplication = async (
     error,
     args,
     fullName,
-    deploymentPayload
+    githubDeploymentObject
   );
 };
 
