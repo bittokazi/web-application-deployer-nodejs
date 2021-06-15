@@ -301,9 +301,14 @@ export const __startApplication = (
                 }
               )
               .then((_result) => {});
+            let deploymentStatus = "error";
+            if (data.toString() == "0") {
+              deploymentStatus = "success";
+            }
             db.deployment
               .create({
                 name: result[0].name,
+                status: deploymentStatus,
               })
               .then((deployment) => {
                 if (data.toString() == "0") {
@@ -462,9 +467,14 @@ export const stopApplication = (
                 }
               )
               .then((_result) => {});
+            let deploymentStatus = "error";
+            if (data.toString() == "0") {
+              deploymentStatus = "success";
+            }
             db.deployment
               .create({
                 name: result[0].name,
+                status: deploymentStatus,
               })
               .then((deployment) => {
                 if (data.toString() == "0") {
@@ -597,9 +607,14 @@ export const deployApplication = (
                 }
               )
               .then((_result) => {});
+            let deploymentStatus = "error";
+            if (data.toString() == "0") {
+              deploymentStatus = "success";
+            }
             db.deployment
               .create({
                 name: result[0].name,
+                status: deploymentStatus,
               })
               .then((deployment) => {
                 if (data.toString() == "0") {
