@@ -274,11 +274,11 @@ export default class ShowApplication extends Component {
                                 <td>
                                   {deployment.status &&
                                     deployment.status == "success" && (
-                                      <div style="btn btn-success">Success</div>
+                                      <div class="btn btn-success">Success</div>
                                     )}
                                   {(!deployment.status ||
                                     deployment.status != "success") && (
-                                    <div style="btn btn-error">Error</div>
+                                    <div class="btn btn-error">Error</div>
                                   )}
                                 </td>
                               </tr>
