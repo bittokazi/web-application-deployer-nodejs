@@ -196,7 +196,6 @@ const _startApplication = async (
     Config()._GITHUB_TOKEN != "" &&
     result[0].gitRepoLink.includes("github.com")
   ) {
-    console.log(`GITHUB API REQUEST -> POST /repos/${fullName}/deployments`);
     const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
     const explode = result[0].gitRepoLink.split("/");
     fullName = explode[explode.length - 2] + "/" + explode[explode.length - 1];
@@ -207,6 +206,7 @@ const _startApplication = async (
         environment: result[0].name.toLowerCase(),
       }
     );
+    console.log(`GITHUB API REQUEST -> POST /repos/${fullName}/deployments`);
   }
 
   __startApplication(
