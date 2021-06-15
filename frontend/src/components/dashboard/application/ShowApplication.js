@@ -252,7 +252,7 @@ export default class ShowApplication extends Component {
                           <tr>
                             <th>Name</th>
                             <th>When</th>
-                            <th>Date</th>
+                            {/* <th>Date</th> */}
                             <th>Status</th>
                           </tr>
                         </thead>
@@ -266,11 +266,11 @@ export default class ShowApplication extends Component {
                                     {deployment.timestamp}
                                   </Moment>
                                 </td>
-                                <td>
+                                {/* <td>
                                   <Moment parse="YYYY-MM-DD">
                                     {deployment.timestamp}
                                   </Moment>
-                                </td>
+                                </td> */}
                                 <td>
                                   {deployment.status &&
                                     deployment.status == "success" && (
