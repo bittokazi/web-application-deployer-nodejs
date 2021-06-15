@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "deployment",
     {
       name: DataTypes.STRING,
+      status: DataTypes.STRING,
       timestamp: {
         type: DataTypes.DATE,
         allowNull: false,

@@ -252,7 +252,8 @@ export default class ShowApplication extends Component {
                           <tr>
                             <th>Name</th>
                             <th>When</th>
-                            <th>Tme</th>
+                            <th>Date</th>
+                            <th>Status</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -266,9 +267,17 @@ export default class ShowApplication extends Component {
                                   </Moment>
                                 </td>
                                 <td>
-                                  <Moment parse="YYYY-MM-DD HH:mm">
+                                  <Moment parse="YYYY-MM-DD">
                                     {deployment.timestamp}
                                   </Moment>
+                                </td>
+                                <td>
+                                  {deployment.status == "success" && (
+                                    <div style="btn btn-success">Success</div>
+                                  )}
+                                  {deployment.status != "success" && (
+                                    <div style="btn btn-error">Error</div>
+                                  )}
                                 </td>
                               </tr>
                             );
