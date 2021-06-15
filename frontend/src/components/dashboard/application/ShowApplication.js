@@ -274,11 +274,27 @@ export default class ShowApplication extends Component {
                                 <td>
                                   {deployment.status &&
                                     deployment.status == "success" && (
-                                      <div class="btn btn-success">Success</div>
+                                      <div
+                                        class="btn-success"
+                                        style={{
+                                          "text-align": "center",
+                                          "border-radius": "15px",
+                                        }}
+                                      >
+                                        Success
+                                      </div>
                                     )}
                                   {(!deployment.status ||
                                     deployment.status != "success") && (
-                                    <div class="btn btn-error">Error</div>
+                                    <div
+                                      class="btn-danger"
+                                      style={{
+                                        "text-align": "center",
+                                        "border-radius": "15px",
+                                      }}
+                                    >
+                                      Error
+                                    </div>
                                   )}
                                 </td>
                               </tr>
