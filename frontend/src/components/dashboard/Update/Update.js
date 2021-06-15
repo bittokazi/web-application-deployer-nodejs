@@ -96,7 +96,7 @@ export default class Update extends Component {
               <div class="row">
                 <div class="col-md-12">
                   <div class="white-box">
-                    <h5>Current Version: 1.1.6.rc_3</h5>
+                    <h5>Current Version: 1.1.6.rc_4</h5>
                     <br></br>
                     <button
                       class="btn btn-info waves-effect waves-light"

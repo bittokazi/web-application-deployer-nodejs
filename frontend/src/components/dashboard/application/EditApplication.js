@@ -73,6 +73,7 @@ export default class AddApplication extends Component {
           healthUrl: response.data.healthUrl,
           startCommand: response.data.startCommand,
           stopCommand: response.data.stopCommand,
+          gitRepoLink: response.data.gitRepoLink,
         });
       },
       (error) => {
