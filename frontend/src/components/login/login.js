@@ -3,13 +3,15 @@ import { useHistory } from "react-router-dom";
 import { ApiCall } from "./../../services/NetworkLayer";
 import AuthStore from "./../../services/AuthStore";
 import querystring from "querystring";
-import { Link } from "react-router-dom";
-import config from "./../../config";
+import ClipLoader from "react-spinners/ClipLoader";
 import "./login.css";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loggedInCheck, setLoggedInCheck] = useState(true);
+  let [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#fa7035");
   let useHistoryRouter = useHistory();
 
   useEffect(() => {
@@ -26,11 +28,21 @@ export default function Login() {
         },
         (resolve) => {
           if (resolve.status >= 200) {
-            useHistoryRouter.push("/dashboard");
+            setTimeout(() => {
+              useHistoryRouter.push("/dashboard");
+            }, 1000);
           }
         },
-        (reject) => {}
+        (reject) => {
+          setTimeout(() => {
+            setLoggedInCheck(false);
+          }, 1000);
+        }
       );
+    } else {
+      setTimeout(() => {
+        setLoggedInCheck(false);
+      }, 1000);
     }
   };
 
@@ -76,43 +88,52 @@ export default function Login() {
             <div class="app-title">
               <h1>Login</h1>
             </div>
-
-            <div class="login-form">
-              <div class="control-group">
-                <input
-                  type="text"
-                  class="login-field"
-                  value=""
-                  placeholder="username"
-                  id="login-name"
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                />
-                <label
-                  class="login-field-icon fui-user"
-                  for="login-name"
-                ></label>
+            {loggedInCheck && (
+              <div class="loading-bar">
+                <ClipLoader color={color} loading={loading} size={70} />
               </div>
+            )}
 
-              <div class="control-group">
-                <input
-                  type="password"
-                  class="login-field"
-                  value=""
-                  placeholder="password"
-                  id="login-pass"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-                <label
-                  class="login-field-icon fui-lock"
-                  for="login-pass"
-                ></label>
+            {!loggedInCheck && (
+              <div class="login-form">
+                <div class="control-group">
+                  <input
+                    type="text"
+                    class="login-field"
+                    value=""
+                    placeholder="username"
+                    id="login-name"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                  />
+                  <label
+                    class="login-field-icon fui-user"
+                    for="login-name"
+                  ></label>
+                </div>
+
+                <div class="control-group">
+                  <input
+                    type="password"
+                    class="login-field"
+                    value=""
+                    placeholder="password"
+                    id="login-pass"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                  <label
+                    class="login-field-icon fui-lock"
+                    for="login-pass"
+                  ></label>
+                </div>
+
+                <button class="btn btn-primary btn-large btn-block">
+                  login
+                </button>
+                {/* <a class="login-link" href="#">Lost your password?</a> */}
               </div>
-
-              <button class="btn btn-primary btn-large btn-block">login</button>
-              {/* <a class="login-link" href="#">Lost your password?</a> */}
-            </div>
+            )}
           </div>
         </div>
 

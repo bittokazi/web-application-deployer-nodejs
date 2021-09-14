@@ -127,3 +127,9 @@ body {
     background-position: -2000px 2000px;
   }
 }
+
+.loading-bar {
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 24px;
+}
