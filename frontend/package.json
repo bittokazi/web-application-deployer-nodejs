@@ -30,7 +30,8 @@
     "build:dev": "REACT_APP_STAGE=dev npm run build",
     "build:stage": "REACT_APP_STAGE=staging npm run build",
     "build:prod": "REACT_APP_STAGE=production npm run build",
-    "build:weallride": "REACT_APP_STAGE=weallride npm run build"
+    "build:weallride": "REACT_APP_STAGE=weallride npm run build",
+    "build:oracle-test": "REACT_APP_STAGE=oracle_test npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
