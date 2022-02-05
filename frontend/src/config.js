@@ -23,9 +23,9 @@ const weallride = {
 };
 
 const oracle_test = {
-  API_BASE_URL: "infra.bitto.website",
+  API_BASE_URL: "infra.bittokazi.com",
   API_BASE_URL_PROTOCOL: "https://",
-  CHAT_SERVER_URL: "https://infra.bitto.website",
+  CHAT_SERVER_URL: "https://infra.bittokazi.com",
 };
 
 let config = {};
