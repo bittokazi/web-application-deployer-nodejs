@@ -49,7 +49,7 @@ export default class ShowApplication extends Component {
       },
       (response) => {
         this.setState({
-          previousLog: response.data.data.split("\\n"),
+          previousLog: response.data.data.split("\n"),
         });
       },
       (error) => {
