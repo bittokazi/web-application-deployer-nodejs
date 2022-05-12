@@ -22,6 +22,12 @@ const weallride = {
   CHAT_SERVER_URL: "https://deploy.weallride.org",
 };
 
+const oracle_test = {
+  API_BASE_URL: "infra.bittokazi.com",
+  API_BASE_URL_PROTOCOL: "https://",
+  CHAT_SERVER_URL: "https://infra.bittokazi.com",
+};
+
 let config = {};
 
 if (process.env.REACT_APP_STAGE === "production") {
@@ -30,6 +36,8 @@ if (process.env.REACT_APP_STAGE === "production") {
   config = stage;
 } else if (process.env.REACT_APP_STAGE === "weallride") {
   config = weallride;
+} else if (process.env.REACT_APP_STAGE === "oracle_test") {
+  config = oracle_test;
 } else {
   config = dev;
 }
