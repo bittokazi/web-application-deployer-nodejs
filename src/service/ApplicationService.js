@@ -914,24 +914,25 @@ function ensureExists(path, cb) {
 }
 
 function createLogFile(appFolder, data) {
-  fs.writeFile(
-    Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
-    data,
-    function (err) {
-      if (err) return console.log(err);
-      console.log("Log file is created successfully.");
-    }
-  );
+  try {
+    fs.writeFileSync(
+      Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
+      data
+    );
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function appendLogFile(appFolder, data) {
-  fs.appendFile(
-    Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
-    data,
-    function (err) {
-      if (err) return console.log(err);
-    }
-  );
+  try {
+    fs.appendFileSync(
+      Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
+      data
+    );
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export const getLogFile = (id, success, error) => {
