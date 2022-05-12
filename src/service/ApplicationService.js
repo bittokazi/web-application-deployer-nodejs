@@ -915,6 +915,7 @@ function ensureExists(path, cb) {
 
 function createLogFile(appFolder, data) {
   try {
+    console.log("THE FUCK??");
     fs.writeFileSync(
       Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
       data
@@ -926,6 +927,7 @@ function createLogFile(appFolder, data) {
 
 function appendLogFile(appFolder, data) {
   try {
+    console.log("THE FUCK?? A");
     fs.appendFileSync(
       Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
       data
