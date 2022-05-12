@@ -41,6 +41,18 @@ export default class ShowApplication extends Component {
         console.log(error.response);
       }
     );
+    ApiCall().authorized(
+      {
+        method: "GET",
+        url: "/applications/" + this.props.match.params.id + "/log",
+      },
+      (response) => {
+        console.log(response.data.data);
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
   }
 
   getHealthStatus(url) {

@@ -9,6 +9,8 @@ import {
   getAllDeploymentsController,
   startApplicationCon,
   stopApplicationCon,
+  getLogFile,
+  getLogFileCon,
 } from "./../controllers/ApplicationController";
 import FormValidator from "../middlewares/FormValidator";
 import InvalidFormResponse from "../middlewares/InvalidFormResponse";
@@ -29,5 +31,6 @@ router.get("/:id/deploy", deployApplicationCon);
 router.get("/:id/deploy/stop", stopApplicationCon);
 router.get("/:id", showApplicationCon);
 router.get("/:name/deployments", getAllDeploymentsController);
+router.get("/:id/log", getLogFileCon);
 
 export default router;

@@ -7,6 +7,7 @@ import {
   selfDeployerService,
   startApplication,
   stopApplication,
+  getLogFile,
 } from "./../service/ApplicationService";
 import { getAllDeployments } from "../service/DeploymentService";
 
@@ -115,6 +116,18 @@ export const showApplicationCon = (req, res, next) => {
 export const selfDeployerServiceController = (req, res, next) => {
   selfDeployerService(
     req,
+    (result) => {
+      res.status(200).json(result);
+    },
+    (error) => {
+      res.status(200).json(error);
+    }
+  );
+};
+
+export const getLogFileCon = (req, res, next) => {
+  getLogFile(
+    req.param("id"),
     (result) => {
       res.status(200).json(result);
     },

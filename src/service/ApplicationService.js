@@ -563,6 +563,11 @@ export const deployApplication = (
           }
         )
         .then((__result) => {
+          createLogFile(result[0].name);
+          appendLogFile(
+            result[0].name,
+            "Initiated Deployment for " + result[0].name
+          );
           req.socketIo.emit("chat.message.deploy", {
             message: "Initiated Deployment for " + result[0].name,
             name: result[0].name,
@@ -584,6 +589,7 @@ export const deployApplication = (
               (args ? " " + args : "")
           );
           bash.stdout.on("data", function (data) {
+            appendLogFile(result[0].name, "log> " + data.toString());
             req.socketIo.emit("chat.message.deploy", {
               message: "log> " + data.toString(),
               name: result[0].name,
@@ -591,6 +597,7 @@ export const deployApplication = (
             });
           });
           bash.stderr.on("data", function (data) {
+            appendLogFile(result[0].name, "Error> " + data.toString());
             req.socketIo.emit("chat.message.deploy", {
               message: "Error> " + data.toString(),
               name: result[0].name,
@@ -636,6 +643,13 @@ export const deployApplication = (
                     );
                   }
 
+                  appendLogFile(
+                    result[0].name,
+                    "Deploy>>>>>>>>>>>>" +
+                      result[0].name +
+                      "<<<<<<<<<<<<SUCCESS"
+                  );
+
                   sendNotification(
                     "Deployment Success",
                     result[0].name + " deployment successful",
@@ -674,6 +688,10 @@ export const deployApplication = (
                     "https://prisminfosys.com/images/deployment.png",
                     ""
                   );
+                  appendLogFile(
+                    result[0].name,
+                    "Deploy>>>>>>>>>>>>" + result[0].name + "<<<<<<<<<<<<Failed"
+                  );
                   req.socketIo.emit("chat.message.deploy", {
                     message:
                       "Deploy>>>>>>>>>>>>" +
@@ -683,6 +701,7 @@ export const deployApplication = (
                     type: "deployment-success",
                   });
                 }
+                appendLogFile(result[0].name, "Exit: " + data.toString());
                 req.socketIo.emit("chat.message.deploy", {
                   message: "Exit: " + data.toString(),
                   name: result[0].name,
@@ -894,3 +913,51 @@ function ensureExists(path, cb) {
     } else cb(null); // successfully created folder
   });
 }
+
+function createLogFile(appFolder) {
+  fs.writeFile(
+    Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
+    "",
+    function (err) {
+      if (err) return console.log(err);
+    }
+  );
+}
+
+function appendLogFile(appFolder, data) {
+  fs.appendFile(
+    Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
+    data,
+    function (err) {
+      if (err) return console.log(err);
+    }
+  );
+}
+
+export const getLogFile = (id, success, error) => {
+  db.application
+    .findAll({
+      where: {
+        id: id,
+      },
+      order: [["id", "DESC"]],
+    })
+    .then((result) => {
+      if (result.length == 0) {
+        error({ message: "not exist" });
+        return;
+      }
+
+      fs.readFile(
+        Config()._APPLICATION_FOLDER + "/" + result[0].name + "/log.txt",
+        "utf8",
+        function (err, data) {
+          if (err) {
+            error(err);
+            return console.log(err);
+          }
+          success({ data });
+        }
+      );
+    });
+};
