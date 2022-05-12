@@ -18,6 +18,7 @@ export default class ShowApplication extends Component {
       messages: [],
       isDeploying: true,
       deployments: [],
+      previousLog: "",
     };
   }
   componentDidMount() {}
@@ -109,6 +110,7 @@ export default class ShowApplication extends Component {
       if (message.type == "deployment-start") {
         this.state.application.isOnline = false;
         this.setState({
+          previousLog: "",
           isDeploying: true,
           application: this.state.application,
         });
@@ -352,6 +354,9 @@ export default class ShowApplication extends Component {
                           "overflow-y": "scroll",
                         }}
                       >
+                        {this.state.previousLog != "" && (
+                          <div class="col-md-12">{this.state.previousLog}</div>
+                        )}
                         {this.state.messages.map((message) => {
                           return <div class="col-md-12">{message}</div>;
                         })}
