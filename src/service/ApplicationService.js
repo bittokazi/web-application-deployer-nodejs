@@ -209,14 +209,25 @@ const _startApplication = async (
     console.log(`GITHUB API REQUEST -> POST /repos/${fullName}/deployments`);
   }
 
-  __startApplication(
+  // __startApplication(
+  //   req,
+  //   payload,
+  //   id,
+  //   success,
+  //   error,
+  //   args,
+  //   fullName,
+  //   githubDeploymentObject
+  // );
+
+  deployApplication(
     req,
     payload,
     id,
     success,
     error,
     args,
-    fullName,
+    "github",
     githubDeploymentObject
   );
 };
@@ -914,27 +925,23 @@ function ensureExists(path, cb) {
 }
 
 function createLogFile(appFolder, data) {
-  try {
-    console.log("THE FUCK??");
-    fs.writeFileSync(
-      Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
-      data
-    );
-  } catch (err) {
-    console.error(err);
-  }
+  fs.writeFile(
+    Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
+    data,
+    function (err) {
+      if (err) return console.log(err);
+    }
+  );
 }
 
 function appendLogFile(appFolder, data) {
-  try {
-    console.log("THE FUCK?? A");
-    fs.appendFileSync(
-      Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
-      data
-    );
-  } catch (err) {
-    console.error(err);
-  }
+  fs.appendFile(
+    Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
+    data,
+    function (err) {
+      if (err) return console.log(err);
+    }
+  );
 }
 
 export const getLogFile = (id, success, error) => {
