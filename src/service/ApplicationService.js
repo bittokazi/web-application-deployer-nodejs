@@ -563,8 +563,7 @@ export const deployApplication = (
           }
         )
         .then((__result) => {
-          createLogFile(result[0].name);
-          appendLogFile(
+          createLogFile(
             result[0].name,
             "Initiated Deployment for " + result[0].name
           );
@@ -907,17 +906,17 @@ export const selfDeployerService = (req, success, error) => {
 function ensureExists(path, cb) {
   fs.mkdir(path, function (err) {
     if (err) {
-      if (err.code == "EEXIST") cb(null);
+      if (err.code == "EXIST") cb(null);
       // ignore the error if the folder already exists
       else cb(err); // something else went wrong
     } else cb(null); // successfully created folder
   });
 }
 
-function createLogFile(appFolder) {
+function createLogFile(appFolder, data) {
   fs.writeFile(
     Config()._APPLICATION_FOLDER + "/" + appFolder + "/log.txt",
-    "",
+    data,
     function (err) {
       if (err) return console.log(err);
     }
