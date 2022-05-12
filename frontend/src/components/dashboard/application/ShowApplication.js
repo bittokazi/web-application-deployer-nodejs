@@ -48,7 +48,9 @@ export default class ShowApplication extends Component {
         url: "/applications/" + this.props.match.params.id + "/log",
       },
       (response) => {
-        console.log(response.data.data);
+        this.setState({
+          previousLog: response.data.data,
+        });
       },
       (error) => {
         console.log(error.response);
