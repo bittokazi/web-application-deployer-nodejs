@@ -919,6 +919,7 @@ function createLogFile(appFolder, data) {
     data,
     function (err) {
       if (err) return console.log(err);
+      console.log("Log file is created successfully.");
     }
   );
 }
