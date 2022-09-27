@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import AuthComponent from "./../AuthComponent";
-import DashboardBreadcrumb from "./.././../../layouts/DashboardBreadcrumb";
-import { ApiCall } from "./../../../services/NetworkLayer";
+import AuthComponent from "../AuthComponent";
+import DashboardBreadcrumb from "../../../layouts/DashboardBreadcrumb";
+import { ApiCall } from "../../../services/NetworkLayer";
 
 const $ = window.$;
 
-export default class AddUser extends Component {
+export default class UpdateUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
       password: "",
       email: "",
+      changePassword: false,
       exists: false,
       errorMessage: "",
     };
@@ -32,12 +33,13 @@ export default class AddUser extends Component {
     });
     ApiCall().authorized(
       {
-        method: "POST",
-        url: "/users",
+        method: "PUT",
+        url: "/users/" + this.props.match.params.id,
         data: {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
+          changePassword: this.state.changePassword,
         },
       },
       (response) => {
@@ -52,14 +54,9 @@ export default class AddUser extends Component {
           });
           return;
         }
-        this.setState({
-          username: "",
-          password: "",
-          email: "",
-        });
         $("#alerttopright").fadeToggle(350).delay(3000).fadeToggle(350);
         $("#alerttoprightTitle").text("Success");
-        $("#alerttoprightBody").text("User Added Successfully");
+        $("#alerttoprightBody").text("User Updated Successfully");
       },
       (error) => {
         console.log(error.response);
@@ -74,13 +71,40 @@ export default class AddUser extends Component {
     );
   };
 
+  authSuccess() {
+    ApiCall().authorized(
+      {
+        method: "GET",
+        url: "/users/" + this.props.match.params.id,
+      },
+      (response) => {
+        console.log(response);
+        this.setState({
+          username: response.data.username,
+          email: response.data.email,
+          changePassword: response.data.changePassword,
+        });
+      },
+      (error) => {
+        console.log(error.response);
+        if (error.response.status == 404) {
+          this.setState({
+            errorMessage: error.response.data.message,
+            exists: true,
+          });
+          return;
+        }
+      }
+    );
+  }
+
   render() {
     return (
-      <AuthComponent>
+      <AuthComponent authSuccess={() => this.authSuccess()}>
         <div class="container-fluid">
           <div class="row bg-title">
             <div class="col-lg-12">
-              <h4 class="page-title">Add User</h4>
+              <h4 class="page-title">Update User</h4>
               <DashboardBreadcrumb />
             </div>
           </div>
@@ -98,6 +122,7 @@ export default class AddUser extends Component {
                         type="text"
                         class="form-control form-control-line"
                         value={this.state.username}
+                        disabled
                         onChange={(event) => this.updateForm(event, "username")}
                       />
                     </div>
@@ -111,6 +136,21 @@ export default class AddUser extends Component {
                         value={this.state.email}
                         onChange={(event) => this.updateForm(event, "email")}
                       />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-md-12">Change Password</label>
+                    <div class="col-md-12">
+                      <select
+                        class="form-control form-control-line"
+                        value={this.state.changePassword}
+                        onChange={(event) =>
+                          this.updateForm(event, "changePassword")
+                        }
+                      >
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
                     </div>
                   </div>
                   <div class="form-group">

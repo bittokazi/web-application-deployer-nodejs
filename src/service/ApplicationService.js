@@ -1,56 +1,75 @@
 import * as db from "../models";
 import fs from "fs";
 import { Config } from "./../config/Config";
-var exec = require("child_process").exec;
 import crypto from "crypto";
 import { sendNotification } from "./FirebaseService";
 import { dockerCheckBuildStatus } from "./DockerHubService";
 import { Octokit } from "@octokit/core";
+const { spawn } = require("child_process");
 
 export const createApplication = (body, success, error) => {
-  ensureExists(Config()._APPLICATION_FOLDER + "/" + body.name, function (err) {
-    if (err) {
-    } else {
-      fs.writeFile(
-        Config()._APPLICATION_FOLDER +
-          "/" +
-          body.name +
-          "/" +
-          body.name +
-          ".sh",
-        body.script,
-        function (err) {
-          if (err) return console.log(err);
-          fs.writeFile(
-            Config()._APPLICATION_FOLDER + "/" + body.name + "/.env",
-            body.environments,
-            function (err) {
-              if (err) return console.log(err);
-              body.script =
+  checkAppName(
+    body,
+    (result) => {
+      if (result) {
+        error("Application name exists", 400);
+      } else {
+        ensureExists(
+          Config()._APPLICATION_FOLDER + "/" + body.name,
+          function (err) {
+            if (err) {
+            } else {
+              fs.writeFile(
                 Config()._APPLICATION_FOLDER +
-                "/" +
-                body.name +
-                "/" +
-                body.name +
-                ".sh";
-              body.location = Config()._APPLICATION_FOLDER + "/" + body.name;
-              body.environments =
-                Config()._APPLICATION_FOLDER + "/" + body.name + "/.env";
-              body.isDeploying = false;
-              db.application
-                .create(body)
-                .then((result) => {
-                  success({ success: true });
-                })
-                .catch((err) => {
-                  error(err);
-                });
+                  "/" +
+                  body.name +
+                  "/" +
+                  body.name +
+                  ".sh",
+                body.script,
+                function (err) {
+                  if (err) return console.log(err);
+                  fs.writeFile(
+                    Config()._APPLICATION_FOLDER + "/" + body.name + "/.env",
+                    body.environments,
+                    function (err) {
+                      if (err) return console.log(err);
+                      body.script =
+                        Config()._APPLICATION_FOLDER +
+                        "/" +
+                        body.name +
+                        "/" +
+                        body.name +
+                        ".sh";
+                      body.location =
+                        Config()._APPLICATION_FOLDER + "/" + body.name;
+                      body.environments =
+                        Config()._APPLICATION_FOLDER +
+                        "/" +
+                        body.name +
+                        "/.env";
+                      body.isDeploying = false;
+                      db.application
+                        .create(body)
+                        .then((result) => {
+                          success({ success: true });
+                        })
+                        .catch((err) => {
+                          error(err);
+                        });
+                    }
+                  );
+                }
+              );
             }
-          );
-        }
-      );
+          }
+        );
+      }
+    },
+    (err) => {
+      error(err);
     }
-  });
+  );
 };
 
 export const getAllApplication = (success, error) => {
@@ -142,9 +161,27 @@ export const showApplication = (id, success, error) => {
             startCommand: result[0].startCommand,
             stopCommand: result[0].stopCommand,
             gitRepoLink: result[0].gitRepoLink,
+            clone: result[0].clone,
           });
         });
       });
+    })
+    .catch((err) => {
+      error(err);
+    });
+};
+
+export const checkAppName = (payload, success, error) => {
+  db.application
+    .findAll({
+      where: { email: payload.name },
+      attributes: ["id"],
+      include: [{ all: true }],
+      order: [["id", "DESC"]],
+    })
+    .then((result) => {
+      if (result.length > 0) success(true);
+      else success(false);
     })
     .catch((err) => {
       error(err);
@@ -198,7 +235,10 @@ const _startApplication = async (
   ) {
     const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
     const explode = result[0].gitRepoLink.split("/");
-    fullName = explode[explode.length - 2] + "/" + explode[explode.length - 1];
+    fullName =
+      explode[explode.length - 2] +
+      "/" +
+      explode[explode.length - 1].replace(".git", "");
     githubDeploymentObject = await octokit.request(
       `POST /repos/${fullName}/deployments`,
       {
@@ -281,7 +321,7 @@ export const __startApplication = (
             ""
           );
 
-          let bash = exec(
+          let bash = spawn(
             "cd " +
               result[0].location +
               " && bash " +
@@ -451,7 +491,7 @@ export const stopApplication = (
             ""
           );
 
-          let bash = exec(
+          let bash = spawn(
             "cd " + result[0].location + " && " + result[0].stopCommand
           );
           bash.stdout.on("data", function (data) {
@@ -591,7 +631,7 @@ export const deployApplication = (
             ""
           );
 
-          let bash = exec(
+          let bash = spawn(
             "cd " +
               result[0].location +
               " && bash " +
@@ -761,7 +801,134 @@ export const githubDeployApplication = (req, success, error) => {
                 "https://prisminfosys.com/images/deployment.png",
                 ""
               );
-              createGithubDeployment(req, req.body, result[0], success, error);
+              if (result[0].clone) {
+                let command =
+                  "git clone https://" + Config()._GITHUB_USERNAME + ":";
+                command += Config()._GITHUB_TOKEN;
+                command +=
+                  "@" +
+                  result[0].gitRepoLink
+                    .replace("http://", "")
+                    .replace("https://", "");
+                let bash = spawn(command);
+                bash.stdout.on("data", function (data) {
+                  appendLogFile(result[0].name, "log> " + data.toString());
+                  req.socketIo.emit("chat.message.deploy", {
+                    message: "log> " + data.toString(),
+                    name: result[0].name,
+                    type: "deployment-log",
+                  });
+                });
+                bash.stderr.on("data", function (data) {
+                  appendLogFile(result[0].name, "Error> " + data.toString());
+                  req.socketIo.emit("chat.message.deploy", {
+                    message: "Error> " + data.toString(),
+                    name: result[0].name,
+                    type: "deployment-err",
+                  });
+                });
+                bash.on("exit", function (data) {
+                  createGithubDeployment(
+                    req,
+                    req.body,
+                    result[0],
+                    success,
+                    error
+                  );
+                });
+              } else {
+                createGithubDeployment(
+                  req,
+                  req.body,
+                  result[0],
+                  success,
+                  error
+                );
+              }
+            } else error(err);
+          } else error(err);
+        } else error(err);
+      })
+      .catch((err) => {
+        error(err);
+      });
+  }
+};
+
+export const gitlabDeployApplication = (req, success, error) => {
+  if (req.param("id") && JSON.stringify(req.body)) {
+    db.application
+      .findAll({
+        where: {
+          name: req.param("id"),
+        },
+        order: [["id", "DESC"]],
+      })
+      .then((result) => {
+        if (result.length == 0) {
+          error({ message: "not exist" });
+          return;
+        }
+        if (
+          req.header("X-Gitlab-Token") &&
+          req.header("X-Gitlab-Token") != "null" &&
+          req.header("X-Gitlab-Token") != ""
+        ) {
+          if (req.headers["X-Gitlab-Token"] === result[0].secret) {
+            if (req.body.ref === "refs/heads/" + result[0].branch) {
+              sendNotification(
+                "Gitlab auto Deployment",
+                result[0].name + " gitlab auto deployment started",
+                "https://prisminfosys.com/images/deployment.png",
+                ""
+              );
+              if (result[0].clone) {
+                let command = "git clone https://gitlab-ci-token:";
+                command += Config()._GITLAB_TOKEN;
+                command +=
+                  "@" +
+                  result[0].gitRepoLink
+                    .replace("http://", "")
+                    .replace("https://", "");
+                let bash = spawn(command);
+                bash.stdout.on("data", function (data) {
+                  appendLogFile(result[0].name, "log> " + data.toString());
+                  req.socketIo.emit("chat.message.deploy", {
+                    message: "log> " + data.toString(),
+                    name: result[0].name,
+                    type: "deployment-log",
+                  });
+                });
+                bash.stderr.on("data", function (data) {
+                  appendLogFile(result[0].name, "Error> " + data.toString());
+                  req.socketIo.emit("chat.message.deploy", {
+                    message: "Error> " + data.toString(),
+                    name: result[0].name,
+                    type: "deployment-err",
+                  });
+                });
+                bash.on("exit", function (data) {
+                  createGithubDeployment(
+                    req,
+                    req.body,
+                    result[0],
+                    success,
+                    error,
+                    null,
+                    "gitlab"
+                  );
+                });
+              } else {
+                createGithubDeployment(
+                  req,
+                  req.body,
+                  result[0],
+                  success,
+                  error,
+                  null,
+                  "gitlab"
+                );
+              }
             } else error(err);
           } else error(err);
         } else error(err);
@@ -869,7 +1036,7 @@ export const selfDeployerService = (req, success, error) => {
     "https://prisminfosys.com/images/deployment.png",
     ""
   ).finally(() => {
-    let bash = exec(
+    let bash = spawn(
       "cp " +
         __dirname +
         "/../../scripts/" +

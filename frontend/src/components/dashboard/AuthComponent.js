@@ -12,6 +12,10 @@ export class AuthComponent extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      hasPermission: false,
+      loading: true,
+    };
   }
 
   checkPageAccess(menu) {
@@ -57,22 +61,34 @@ export class AuthComponent extends Component {
         url: "/users/whoami",
       },
       (resolve) => {
+        if (resolve.data.changePassword) {
+          history.push("/");
+        }
         if (!this.context.fcmsubscribe) {
           askForPermissioToReceiveNotifications();
           this.context.setFcmsubscribe(true);
         }
         if (!this.checkPageAccess(resolve.data.access)) {
-          history.push("/dashboard");
-          return;
+          this.setState({ loading: false });
+          setTimeout(() => {
+            $(function () {
+              $(".preloader").fadeOut();
+              $("#side-menu").metisMenu();
+              $("body").trigger("resize");
+            });
+          }, 1000);
+        } else {
+          this.setState({ hasPermission: true, loading: false });
+          setTimeout(() => {
+            $(function () {
+              $(".preloader").fadeOut();
+              $("#side-menu").metisMenu();
+              $("body").trigger("resize");
+            });
+          }, 1000);
         }
         this.context.setUser(resolve.data);
-        setTimeout(() => {
-          $(function () {
-            $(".preloader").fadeOut();
-            $("#side-menu").metisMenu();
-            $("body").trigger("resize");
-          });
-        }, 1000);
+
         if (this.props.authSuccess) {
           this.context.chat.connectChat = true;
           this.props.authSuccess(resolve.data);
@@ -86,7 +102,14 @@ export class AuthComponent extends Component {
   }
 
   render() {
-    return <div id="page-wrapper">{this.props.children}</div>;
+    return (
+      <div id="page-wrapper">
+        {!this.state.loading && this.state.hasPermission && this.props.children}
+        {!this.state.loading && !this.state.hasPermission && (
+          <div>403 - Permission Denied</div>
+        )}
+      </div>
+    );
   }
 }
 

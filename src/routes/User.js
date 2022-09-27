@@ -4,7 +4,10 @@ import {
   whoAmI,
   checkUserExist,
   addUserController,
-  getChatServerToken
+  getChatServerToken,
+  getUserController,
+  updatePasswordController,
+  updateUserController,
 } from "./../controllers/UserController";
 import FormValidator from "./../middlewares/FormValidator";
 
@@ -14,6 +17,8 @@ router.get("/", UserList);
 router.post("/", FormValidator("createUser"), addUserController);
 router.get("/whoami", whoAmI);
 router.get("/chat/token", getChatServerToken);
-router.post("/check-exist", checkUserExist);
+router.get("/:id", getUserController);
+router.put("/change-password", updatePasswordController);
+router.put("/:id", updateUserController);
 
 export default router;

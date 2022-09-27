@@ -12,7 +12,10 @@ export const Config = () => {
     _DEFAULT_OAUTH_CLIENT_SECRET: process.env._DEFAULT_OAUTH_CLIENT_SECRET,
     _FCM_SERVER_KEY: process.env._FCM_SERVER_KEY,
     _SELF_DEPLOY_SCRIPT: process.env._SELF_DEPLOY_SCRIPT,
+    _GITHUB_USERNAME: process.env._GITHUB_USERNAME,
     _GITHUB_TOKEN: process.env._GITHUB_TOKEN,
+    _GITLAB_USERNAME: process.env._GITLAB_USERNAME,
+    _GITLAB_TOKEN: process.env._GITLAB_TOKEN,
   };
 };
 

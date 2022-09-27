@@ -3,6 +3,9 @@ import {
   checkUserAndEmailExist,
   addUserProtected,
   generateChatServerToken,
+  getUser,
+  updateUser,
+  updatePassword,
 } from "./../service/UserService";
 import UserAccess from "./../service/UserAccess";
 import md5 from "md5";
@@ -28,10 +31,10 @@ export const addUserController = (req, res, next) => {
     (result) => {
       return res.status(200).json(result);
     },
-    (error) => {
+    (error, code = 500) => {
       console.error(error);
-      return res.status(500).json({
-        message: "Database Error",
+      return res.status(code).json({
+        message: error,
       });
     }
   );
@@ -63,6 +66,7 @@ export const whoAmI = (req, res, next) => {
     tenant: req.tenant ? req.tenant.key : "",
     image: `https://www.gravatar.com/avatar/${md5(req.user.email)}?d=identicon`,
     access: UserAccess(req.user.role, req),
+    changePassword: req.user.changePassword,
   });
 };
 
@@ -76,4 +80,52 @@ export const getChatServerToken = (req, res, next) => {
   return res.status(200).json({
     token,
   });
+};
+
+export const getUserController = (req, res, next) => {
+  getUser(
+    req.param("id"),
+    (result) => {
+      return res.status(200).json(result);
+    },
+    (error, code = 500) => {
+      console.error(error);
+      return res.status(code).json({
+        message: error,
+      });
+    }
+  );
+};
+
+export const updateUserController = (req, res, next) => {
+  updateUser(
+    req,
+    req.body,
+    req.param("id"),
+    (result) => {
+      return res.status(200).json(result);
+    },
+    (error, code = 500) => {
+      console.error(error);
+      return res.status(code).json({
+        message: error,
+      });
+    }
+  );
+};
+
+export const updatePasswordController = (req, res, next) => {
+  updatePassword(
+    req,
+    req.body,
+    (result) => {
+      return res.status(200).json(result);
+    },
+    (error, code = 500) => {
+      console.error(error);
+      return res.status(code).json({
+        message: error,
+      });
+    }
+  );
 };

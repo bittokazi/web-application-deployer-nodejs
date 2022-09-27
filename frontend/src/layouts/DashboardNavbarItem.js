@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import config from "../config";
 
 const isActive = (path) => {
   if (path.split("/").length == 3) {
@@ -30,16 +31,23 @@ const isActiveSub = (path) => {
   }
 };
 
+const blockedUrl = (path) => {
+  if (config.DOCKER_ENV) {
+    if (path.includes("/dashboard/update")) return true;
+  }
+  return false;
+};
+
 export default function DashboardNavbarItem({ item }) {
   return (
     <li>
-      {item.sub != undefined && item.show && (
+      {item.sub != undefined && item.show && !blockedUrl(item.path) && (
         <Link to={item.path} className={`waves-effect ${isActive(item.path)}`}>
           <i className={item.icon}></i>&nbsp; {item.title}
           <span class="fa arrow"></span>
         </Link>
       )}
-      {item.sub == undefined && item.show && (
+      {item.sub == undefined && item.show && !blockedUrl(item.path) && (
         <Link to={item.path} className={`waves-effect ${isActive(item.path)}`}>
           <i className={item.icon}></i>&nbsp; {item.title}
         </Link>

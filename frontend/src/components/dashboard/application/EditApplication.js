@@ -16,6 +16,7 @@ export default class AddApplication extends Component {
       startCommand: "",
       stopCommand: "",
       gitRepoLink: "",
+      clone: false,
     };
   }
 
@@ -44,6 +45,7 @@ export default class AddApplication extends Component {
           startCommand: this.state.startCommand,
           stopCommand: this.state.stopCommand,
           gitRepoLink: this.state.gitRepoLink,
+          clone: this.state.clone,
         },
       },
       (response) => {
@@ -74,6 +76,7 @@ export default class AddApplication extends Component {
           startCommand: response.data.startCommand,
           stopCommand: response.data.stopCommand,
           gitRepoLink: response.data.gitRepoLink,
+          clone: response.data.clone,
         });
       },
       (error) => {
@@ -133,6 +136,19 @@ export default class AddApplication extends Component {
                           this.updateForm(event, "gitRepoLink")
                         }
                       />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-md-12">Auto Clone</label>
+                    <div class="col-md-12">
+                      <select
+                        class="form-control form-control-line"
+                        value={this.state.clone}
+                        onChange={(event) => this.updateForm(event, "clone")}
+                      >
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
                     </div>
                   </div>
                   <div class="form-group">

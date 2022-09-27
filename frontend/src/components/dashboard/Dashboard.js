@@ -12,6 +12,7 @@ import AddApplication from "./application/AddApplication";
 import ShowApplication from "./application/ShowApplication";
 import EditApplication from "./application/EditApplication";
 import Update from "./Update/Update";
+import UpdateUser from "./user/UpdateUser";
 
 export default function Dashboard() {
   return (
@@ -21,6 +22,7 @@ export default function Dashboard() {
         <Route exact path="/dashboard/profile" component={Profile} />
         <Route exact path="/dashboard/users/add" component={AddUser} />
         <Route exact path="/dashboard/users" component={UserList} />
+        <Route exact path="/dashboard/users/edit/:id" component={UpdateUser} />
         <Route
           exact
           path="/dashboard/applications/add"

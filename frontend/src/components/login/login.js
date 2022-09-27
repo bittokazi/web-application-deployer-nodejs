@@ -10,9 +10,11 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loggedInCheck, setLoggedInCheck] = useState(true);
-  let [loading, setLoading] = useState(true);
+  let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#fa7035");
   let useHistoryRouter = useHistory();
+  const [changePassword, setChangePassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     document.title = "Deploy Automation platform by Bitto Kazi";
@@ -27,10 +29,17 @@ export default function Login() {
           url: "/users/whoami",
         },
         (resolve) => {
-          if (resolve.status >= 200) {
-            setTimeout(() => {
-              useHistoryRouter.push("/dashboard");
-            }, 1000);
+          if (resolve.status == 200) {
+            if (resolve.data.changePassword) {
+              setTimeout(() => {
+                setLoggedInCheck(false);
+                setChangePassword(true);
+              }, 1000);
+            } else {
+              setTimeout(() => {
+                useHistoryRouter.push("/dashboard");
+              }, 1000);
+            }
           }
         },
         (reject) => {
@@ -48,35 +57,67 @@ export default function Login() {
 
   const loginUser = (event) => {
     event.preventDefault();
-    ApiCall()
-      .public()
-      .post("/api/login", {
-        username,
-        password,
-      })
-      .then((res) => {
-        AuthStore().saveClientCredentials(res.data);
-        ApiCall()
-          .token()
-          .post(
-            "/oauth/token",
-            querystring.stringify({
-              username,
-              password,
-              grant_type: "password",
+    setLoading(true);
+    setErrorMessage("");
+    if (!changePassword) {
+      ApiCall()
+        .public()
+        .post("/api/login", {
+          username,
+          password,
+        })
+        .then((res) => {
+          AuthStore().saveClientCredentials(res.data);
+          ApiCall()
+            .token()
+            .post(
+              "/oauth/token",
+              querystring.stringify({
+                username,
+                password,
+                grant_type: "password",
+              })
+            )
+            .then((res) => {
+              AuthStore().saveOauthToken(res.data);
+              useHistoryRouter.push("/dashboard/applications");
             })
-          )
-          .then((res) => {
-            AuthStore().saveOauthToken(res.data);
-            useHistoryRouter.push("/dashboard");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+            .catch((err) => {
+              setErrorMessage(err.response.data.message);
+            });
+        })
+        .catch((err) => {
+          setErrorMessage(err.response.data.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      ApiCall().authorized(
+        {
+          method: "PUT",
+          url: "/users/change-password",
+          data: {
+            password,
+          },
+        },
+        (resolve) => {
+          if (resolve.status == 200) {
+            setTimeout(() => {
+              useHistoryRouter.push("/dashboard");
+            }, 1000);
+          }
+        },
+        (reject) => {
+          console.log(reject.response);
+          if (reject.response.status == 400) {
+            setErrorMessage(reject.response.data.message);
+            setLoading(false);
+            return;
+          }
+        }
+      );
+    }
   };
 
   return (
@@ -90,17 +131,16 @@ export default function Login() {
             </div>
             {loggedInCheck && (
               <div class="loading-bar">
-                <ClipLoader color={color} loading={loading} size={70} />
+                <ClipLoader color={color} loading={true} size={70} />
               </div>
             )}
 
-            {!loggedInCheck && (
+            {!loggedInCheck && !changePassword && (
               <div class="login-form">
                 <div class="control-group">
                   <input
                     type="text"
                     class="login-field"
-                    value=""
                     placeholder="username"
                     id="login-name"
                     value={username}
@@ -116,7 +156,6 @@ export default function Login() {
                   <input
                     type="password"
                     class="login-field"
-                    value=""
                     placeholder="password"
                     id="login-pass"
                     value={password}
@@ -127,9 +166,43 @@ export default function Login() {
                     for="login-pass"
                   ></label>
                 </div>
-
-                <button class="btn btn-primary btn-large btn-block">
+                {errorMessage != "" && (
+                  <div style={{ color: "red" }}>{errorMessage}</div>
+                )}
+                <button
+                  class="btn btn-primary btn-large btn-block"
+                  disabled={loading}
+                >
                   login
+                </button>
+                {/* <a class="login-link" href="#">Lost your password?</a> */}
+              </div>
+            )}
+
+            {!loggedInCheck && changePassword && (
+              <div class="login-form">
+                <div class="control-group">
+                  <input
+                    type="password"
+                    class="login-field"
+                    placeholder="Set new password"
+                    id="login-pass"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                  <label
+                    class="login-field-icon fui-lock"
+                    for="login-pass"
+                  ></label>
+                </div>
+                {errorMessage != "" && (
+                  <div style={{ color: "red" }}>{errorMessage}</div>
+                )}
+                <button
+                  class="btn btn-primary btn-large btn-block"
+                  disabled={loading}
+                >
+                  Change Password
                 </button>
                 {/* <a class="login-link" href="#">Lost your password?</a> */}
               </div>

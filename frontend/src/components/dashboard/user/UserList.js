@@ -2,13 +2,14 @@ import React, { useState, Component } from "react";
 import { ApiCall } from "./../../../services/NetworkLayer";
 import AuthComponent from "./../AuthComponent";
 import DashboardBreadcrumb from "./.././../../layouts/DashboardBreadcrumb";
+import { Link } from "react-router-dom";
 
 export default class UserList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      users: []
+      users: [],
     };
   }
   componentDidMount() {}
@@ -17,12 +18,12 @@ export default class UserList extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/users"
+        url: "/users",
       },
-      response => {
+      (response) => {
         this.setState({ users: response.data });
       },
-      error => {
+      (error) => {
         console.log(error.response);
       }
     );
@@ -52,13 +53,17 @@ export default class UserList extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.users.map(user => {
+                      {this.state.users.map((user) => {
                         return (
                           <tr>
                             <td>{user.id}</td>
                             <td>{user.username}</td>
                             <td>{user.email}</td>
-                            <td>(TBD)</td>
+                            <td>
+                              <Link to={`/dashboard/users/edit/${user.id}`}>
+                                Edit
+                              </Link>
+                            </td>
                           </tr>
                         );
                       })}

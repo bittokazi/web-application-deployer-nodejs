@@ -17,8 +17,11 @@ export const addApplication = (req, res, next) => {
     (result) => {
       return res.status(200).json(result);
     },
-    (error) => {
-      return res.status(500).json(error);
+    (error, code = 500) => {
+      console.error(error);
+      return res.status(code).json({
+        message: error,
+      });
     }
   );
 };

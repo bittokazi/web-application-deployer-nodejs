@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       startCommand: DataTypes.STRING,
       stopCommand: DataTypes.STRING,
       gitRepoLink: DataTypes.STRING,
+      clone: DataTypes.BOOLEAN,
     },
     {}
   );
