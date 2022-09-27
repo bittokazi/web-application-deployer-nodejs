@@ -267,7 +267,7 @@ const _startApplication = async (
     success,
     error,
     args,
-    "github",
+    result[0].gitRepoLink.includes("github.com") ? "github" : "gitlab",
     githubDeploymentObject
   );
 };
@@ -326,7 +326,9 @@ export const __startApplication = (
               result[0].location +
               " && bash " +
               result[0].script +
-              (args ? " " + args : "")
+              (args ? " " + args : ""),
+            [],
+            { shell: true }
           );
           bash.stdout.on("data", function (data) {
             req.socketIo.emit("chat.message.deploy", {
@@ -492,7 +494,9 @@ export const stopApplication = (
           );
 
           let bash = spawn(
-            "cd " + result[0].location + " && " + result[0].stopCommand
+            "cd " + result[0].location + " && " + result[0].stopCommand,
+            [],
+            { shell: true }
           );
           bash.stdout.on("data", function (data) {
             req.socketIo.emit("chat.message.deploy", {
@@ -636,7 +640,9 @@ export const deployApplication = (
               result[0].location +
               " && bash " +
               result[0].script +
-              (args ? " " + args : "")
+              (args ? " " + args : ""),
+            [],
+            { shell: true }
           );
           bash.stdout.on("data", function (data) {
             appendLogFile(result[0].name, "log> " + data.toString());
@@ -810,7 +816,7 @@ export const githubDeployApplication = (req, success, error) => {
                   result[0].gitRepoLink
                     .replace("http://", "")
                     .replace("https://", "");
-                let bash = spawn(command);
+                let bash = spawn(command, [], { shell: true });
                 bash.stdout.on("data", function (data) {
                   appendLogFile(result[0].name, "log> " + data.toString());
                   req.socketIo.emit("chat.message.deploy", {
@@ -890,7 +896,7 @@ export const gitlabDeployApplication = (req, success, error) => {
                   result[0].gitRepoLink
                     .replace("http://", "")
                     .replace("https://", "");
-                let bash = spawn(command);
+                let bash = spawn(command, [], { shell: true });
                 bash.stdout.on("data", function (data) {
                   appendLogFile(result[0].name, "log> " + data.toString());
                   req.socketIo.emit("chat.message.deploy", {
@@ -1051,7 +1057,9 @@ export const selfDeployerService = (req, success, error) => {
         __dirname +
         "/../../scripts/self_deploy.js " +
         __dirname +
-        "/../../../self_deploy.js && cd ../ && node self_deploy.js"
+        "/../../../self_deploy.js && cd ../ && node self_deploy.js",
+      [],
+      { shell: true }
     );
     bash.on("exit", function (data) {
       console.log("exit", data.toString());
