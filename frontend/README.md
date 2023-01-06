@@ -1,68 +1,100 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Web Application Deployer NodeJS
 
-## Available Scripts
+This is a Web application deployer built with NodeJs, React and Postgres
 
-In the project directory, you can run:
+# Features
 
-### `npm start`
+- Auto deploy web application in an event of code commit on Github or Gitlab using webhooks
+- Manual Deploy option
+- Deployment branch selection
+- Realtime Deployment Logs
+- Logs of previous deployment status (success/failed)
+- Users can be added or removed
+- Write your own fully customized deployment commands
+- You can deploy docker containers or any application like eg. deploy in node process manager.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Required tools for setup
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- Node version 12 (we will use nvm to install node)
+- Forever process manager
+- Postgres database
+- docker and docker-compose (we are going to use postgres docker, you can use other method as well)
 
-### `npm test`
+## Install - Step 1
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1.  install docker and docker compose `sudo apt update && sudo apt install docker docker-compose `
+2.  install nvm with command `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
+3.  install node 12 `nvm install 12`
+4.  use node node 12 `nvm use 12`
+5.  install forever process manager `npm i -g forever`
+6.  install postgres database wit the command `docker run --name postgres -d -it -p 0.0.0.0:5432:5432 -e POSTGRES_PASSWORD=password -d postgres` set strong password please.
+7.  Please create ssh key for github using the guide here https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+8.  please add ssh key to github using the steps here https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+9.  Please connect to the **postgres** database using the credentials and create a database named **node_deployer**. you can name the database anything just make sure to put the correct database name in the **.env** file
 
-### `npm run build`
+## Install - Step 2
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- create a folder called "**deployer**" in your server in home directory `mkdir deployer`
+- create another folder to store application data, named "**applications**" `mkdir applications`
+- in the "**deployer**" folder, create 2 files **.env** and **start_deployer.sh** `touch .env && touch start_deployer.sh`
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Install - Step 3
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Please populate the **.env** file you created with below environment variables and put your necessary values:
 
-### `npm run eject`
+    _PORT=8081
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    _NODE_ENV=development
+    _DB_USERNAME=postgres
+    _DB_PASSWORD=password
+    _DB_NAME=node_deployer
+    _DB_HOSTNAME=0.0.0.0
+    _DB_PORT=5432
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    _JWT_SECRET=veryverysecretkey
+    _SOCKET_AUTH_TIMEOUT=5000
+    _BACKEND_URL=http://localhost:5000
+    _SERVICE_AUTH_KEY=gysuyguygc64e6c6e84e6c4e648c46e4ec64ec6
+    _APPLICATION_FOLDER=/absolute/path/to/folder/applications
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    _DEFAULT_OAUTH_CLIENT_ID=n3b43uydf7cv43kjap21n2kh5
+    _DEFAULT_OAUTH_CLIENT_SECRET=jn67ffweb1o87bnzkj3n6bdyu4u5445n456ic
+    _DEFAULT_USER_EMAIL=bitto.kazi@gmail.com
+    _DEFAULT_USER_NAME=admin
+    _DEFAULT_USER_PASS=pass
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Install - Step 4
 
-## Learn More
+Please populate the **start_deployer.sh** file you created with below content:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    #!/bin/bash
+    forever stopall
+    rm -rf web-application-deployer-nodejs
+    git clone --depth 1 -b master https://github.com/bittokazi/web-application-deployer-nodejs.git
+    cd web-application-deployer-nodejs
+    npm install
+    cd frontend
+    npm install
+    npm run build:generic
+    cp -r build ../spaBuild
+    cd ../../
+    cp .env web-application-deployer-nodejs/.env
+    cd web-application-deployer-nodejs
+    forever start -c "npm start" ./
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Also change the permission of **start_deployer.sh** file using the below command in terminal:
 
-### Code Splitting
+    chmod u+x start_deployer.sh
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Run the Web Application Deployer
 
-### Analyzing the Bundle Size
+Make sure you are in **deployer** folder and run the **start_deployer.sh** file using the below Command in terminal:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+    ./start_deployer.sh
 
-### Making a Progressive Web App
+## On First Run
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- open your browser and go to http://youripaddress:8081 as we have set the port **8081**
+- login using the **\_DEFAULT_USER_NAME** and **\_DEFAULT_USER_PASS** you set in the .env file
+- You will be prompted to change the default password.
+- Change the password and start using the deployer.
