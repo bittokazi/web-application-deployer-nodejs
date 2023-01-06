@@ -16,7 +16,7 @@ export default class AddApplication extends Component {
       startCommand: "",
       stopCommand: "",
       gitRepoLink: "",
-      clone: "",
+      clone: false,
     };
   }
 
@@ -115,7 +115,7 @@ export default class AddApplication extends Component {
                       />
                     </div>
                   </div>
-                  <div class="form-group">
+                  {/*<div class="form-group">
                     <label class="col-md-12">Auto Clone</label>
                     <div class="col-md-12">
                       <select
@@ -127,7 +127,7 @@ export default class AddApplication extends Component {
                         <option value="false">No</option>
                       </select>
                     </div>
-                  </div>
+                  </div>*/}
                   <div class="form-group">
                     <label class="col-md-12">Branch</label>
                     <div class="col-md-12">

@@ -226,27 +226,29 @@ const _startApplication = async (
   args = null,
   result
 ) => {
-  let githubDeploymentObject;
+  let githubDeploymentObject = null;
   let fullName = "";
   if (
     Config()._GITHUB_TOKEN &&
     Config()._GITHUB_TOKEN != "" &&
     result[0].gitRepoLink.includes("github.com")
   ) {
-    const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
-    const explode = result[0].gitRepoLink.split("/");
-    fullName =
-      explode[explode.length - 2] +
-      "/" +
-      explode[explode.length - 1].replace(".git", "");
-    githubDeploymentObject = await octokit.request(
-      `POST /repos/${fullName}/deployments`,
-      {
-        ref: result[0].branch,
-        environment: result[0].name.toLowerCase(),
-      }
-    );
-    console.log(`GITHUB API REQUEST -> POST /repos/${fullName}/deployments`);
+    try {
+      const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
+      const explode = result[0].gitRepoLink.split("/");
+      fullName =
+        explode[explode.length - 2] +
+        "/" +
+        explode[explode.length - 1].replace(".git", "");
+      githubDeploymentObject = await octokit.request(
+        `POST /repos/${fullName}/deployments`,
+        {
+          ref: result[0].branch,
+          environment: result[0].name.toLowerCase(),
+        }
+      );
+      console.log(`GITHUB API REQUEST -> POST /repos/${fullName}/deployments`);
+    } catch (error) {}
   }
 
   // __startApplication(
@@ -637,7 +639,7 @@ export const deployApplication = (
 
           let bash = spawn(
             "cd " +
-              result[0].location +
+              resdeployedFromult[0].location +
               " && bash " +
               result[0].script +
               (args ? " " + args : ""),
@@ -954,20 +956,22 @@ const createGithubDeployment = async (
   args = null,
   deployedFrom = "github"
 ) => {
-  let githubDeploymentObject;
+  let githubDeploymentObject = null;
   if (
     Config()._GITHUB_TOKEN &&
     Config()._GITHUB_TOKEN != "" &&
     deployedFrom == "github"
   ) {
-    const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
-    githubDeploymentObject = await octokit.request(
-      `POST /repos/${payload.repository.full_name}/deployments`,
-      {
-        ref: payload.after,
-        environment: result.name.toLowerCase(),
-      }
-    );
+    try {
+      const octokit = new Octokit({ auth: Config()._GITHUB_TOKEN });
+      githubDeploymentObject = await octokit.request(
+        `POST /repos/${payload.repository.full_name}/deployments`,
+        {
+          ref: payload.after,
+          environment: result.name.toLowerCase(),
+        }
+      );
+    } catch (error) {}
   }
   deployApplication(
     req,
