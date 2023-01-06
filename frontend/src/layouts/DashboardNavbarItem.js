@@ -32,7 +32,7 @@ const isActiveSub = (path) => {
 };
 
 const blockedUrl = (path) => {
-  if (config.DOCKER_ENV) {
+  if (config.SHOW_UPDATE) {
     if (path.includes("/dashboard/update")) return true;
   }
   return false;
