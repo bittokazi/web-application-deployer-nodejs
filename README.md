@@ -54,7 +54,7 @@ Please edit the **.env** file you created with below environment variables and p
 
     _JWT_SECRET=veryverysecretkey
     _SOCKET_AUTH_TIMEOUT=5000
-    _BACKEND_URL=http://localhost:5000
+    _BACKEND_URL=http://<youripaddress>or<domain>:8081
     _SERVICE_AUTH_KEY=gysuyguygc64e6c6e84e6c4e648c46e4ec64ec6
     _APPLICATION_FOLDER=/absolute/path/to/folder/applications
 
@@ -63,6 +63,8 @@ Please edit the **.env** file you created with below environment variables and p
     _DEFAULT_USER_EMAIL=bitto.kazi@gmail.com
     _DEFAULT_USER_NAME=admin
     _DEFAULT_USER_PASS=pass
+
+please change **\_JWT_SECRET**, **\_SERVICE_AUTH_KEY**, **\_DEFAULT_OAUTH_CLIENT_ID**, and **\_DEFAULT_OAUTH_CLIENT_SECRET** to whatever you want. Do not use the default value
 
 ## Install - Step 4
 

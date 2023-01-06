@@ -87,7 +87,7 @@ export const ApiCall = () => {
               .then(function (response) {
                 AuthStore().saveOauthToken(response.data);
                 let httpNew = axios.create({
-                  baseURL: `${baseURL}/api`,
+                  baseURL: `${baseURL}api`,
                 });
                 requestConfig.headers.Authorization = `Bearer ${
                   AuthStore().getOauthToken().access_token
