@@ -12,6 +12,8 @@ This is a Web application deployer built with NodeJs, React and Postgres
 - Users can be added or removed
 - Write your own fully customized deployment commands
 - You can deploy docker containers or any application like eg. deploy in node process manager.
+- Browser Notification using Firebase for deployment.
+- Github environment and deployment status can be updated from the deployer.
 
 ## Required tools for setup
 
