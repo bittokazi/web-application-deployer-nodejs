@@ -16,7 +16,7 @@ const generic = {
 
 const docker_env = {
   API_BASE_URL: "/",
-  API_BASE_URL_PROTOCOL: "",
+  API_BASE_URL_PROTOCOL: "http:",
   CHAT_SERVER_URL: "/",
   DOCKER_ENV: true,
   SHOW_UPDATE: false,

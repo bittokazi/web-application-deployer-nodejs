@@ -34,13 +34,14 @@ This is a Web application deployer built with NodeJs, React and Postgres
 
 ## Install - Step 2
 
+- goto your home directory `cd ~`
 - create a folder called "**deployer**" in your server in home directory `mkdir deployer`
 - create another folder to store application data, named "**applications**" `mkdir applications`
-- in the "**deployer**" folder, create 2 files **.env** and **start_deployer.sh** `touch .env && touch start_deployer.sh`
+- in the "**deployer**" folder, create 2 files **.env** and **start_deployer.sh** `cd deployer && touch .env && touch start_deployer.sh`
 
 ## Install - Step 3
 
-Please populate the **.env** file you created with below environment variables and put your necessary values:
+Please edit the **.env** file you created with below environment variables and put your necessary values. command `nano .env` :
 
     _PORT=8081
 
@@ -65,7 +66,7 @@ Please populate the **.env** file you created with below environment variables a
 
 ## Install - Step 4
 
-Please populate the **start_deployer.sh** file you created with below content:
+Please populate the **start_deployer.sh** file you created with below content, command `nano start_deployer` :
 
     #!/bin/bash
     forever stopall

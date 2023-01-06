@@ -19,14 +19,18 @@ const encodedToken = () => {
 export const ApiCall = () => {
   const subdomain = window.location.hostname.split(".");
   console.log(subdomain, "fefefefe");
-  if (config.subdomainMode && subdomain.length == config.subdomainNumber && subdomain[0] != "www") {
+  if (
+    config.subdomainMode &&
+    subdomain.length == config.subdomainNumber &&
+    subdomain[0] != "www"
+  ) {
     baseURL =
       config.API_BASE_URL_PROTOCOL + subdomain[0] + "." + config.API_BASE_URL;
   }
   return {
     public: () => {
       return axios.create({
-        baseURL: baseURL
+        baseURL: baseURL,
       });
     },
     token: () => {
@@ -34,33 +38,33 @@ export const ApiCall = () => {
         baseURL: `${baseURL}`,
         headers: {
           Authorization: `Basic ${encodedToken()}`,
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
     },
     authorized: (call, resolve, reject) => {
       let requestConfig = null;
       let http = axios.create({
-        baseURL: `${baseURL}/api`,
+        baseURL: `${baseURL}api`,
         headers: {
           Authorization: `Bearer ${AuthStore().getOauthToken().access_token}`,
-          tenant: `${AuthStore().getTenantKey()}`
-        }
+          tenant: `${AuthStore().getTenantKey()}`,
+        },
       });
       http.interceptors.request.use(
-        function(config) {
+        function (config) {
           requestConfig = config;
           return config;
         },
-        function(error) {
+        function (error) {
           return Promise.reject(error);
         }
       );
       http.interceptors.response.use(
-        function(response) {
+        function (response) {
           return response;
         },
-        function(error) {
+        function (error) {
           if (!error.response) {
             reject({ type: "noServer" });
           }
@@ -69,38 +73,38 @@ export const ApiCall = () => {
               baseURL: `${baseURL}`,
               headers: {
                 Authorization: `Basic ${encodedToken()}`,
-                "Content-Type": "application/x-www-form-urlencoded"
-              }
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
             });
             refreshToken
               .post(
-                "/oauth/token",
+                "oauth/token",
                 querystring.stringify({
                   grant_type: "refresh_token",
-                  refresh_token: `${AuthStore().getOauthToken().refresh_token}`
+                  refresh_token: `${AuthStore().getOauthToken().refresh_token}`,
                 })
               )
-              .then(function(response) {
+              .then(function (response) {
                 AuthStore().saveOauthToken(response.data);
                 let httpNew = axios.create({
-                  baseURL: `${baseURL}/api`
+                  baseURL: `${baseURL}/api`,
                 });
                 requestConfig.headers.Authorization = `Bearer ${
                   AuthStore().getOauthToken().access_token
                 }`;
                 axios(requestConfig)
-                  .then(res => {
+                  .then((res) => {
                     console.log("new req", res);
                     resolve(res);
                     return;
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     console.log("new req err", err);
                     reject(err);
                     return;
                   });
               })
-              .catch(function(error) {
+              .catch(function (error) {
                 reject(error);
                 return;
               });
@@ -111,8 +115,8 @@ export const ApiCall = () => {
         }
       );
       http(call)
-        .then(res => resolve(res))
-        .catch(err => {});
-    }
+        .then((res) => resolve(res))
+        .catch((err) => {});
+    },
   };
 };
