@@ -22,19 +22,21 @@ This is a Web application deployer built with NodeJs, React and Postgres
 
 ## Install - Step 1
 
-1.  install docker and docker compose `sudo apt install docker-ce docker compose `
+1.  install docker and docker compose `sudo apt update && sudo apt install docker docker-compose `
 2.  install nvm with command `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
-3.  install postgres database wit the command `docker run --name postgres -d -it -p 0.0.0.0:5432:5432 -e POSTGRES_PASSWORD=password -d postgres` set strong password please.
-4.  install forever process manager `npm i -g forever`
-5.  install node 12 `nvm install 12`
-6.  use node node 12 `nvm use 12`
-7.  please add ssh key to github using the steps here https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+3.  install node 12 `nvm install 12`
+4.  use node node 12 `nvm use 12`
+5.  install forever process manager `npm i -g forever`
+6.  install postgres database wit the command `docker run --name postgres -d -it -p 0.0.0.0:5432:5432 -e POSTGRES_PASSWORD=password -d postgres` set strong password please.
+7.  Please create ssh key for github using the guide here https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+8.  please add ssh key to github using the steps here https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+9.  Please connect to the **postgres** database using the credentials and create a database named **node_deployer**. you can name the database anything just make sure to put the correct database name in the **.env** file
 
 ## Install - Step 2
 
-- create a folder called "**deployer**" in your server
-- create another folder to store application data, named "**applications**"
-- in the "**deployer**" folder, create 2 files **.env** and **start_deployer.sh**
+- create a folder called "**deployer**" in your server in home directory `mkdir deployer`
+- create another folder to store application data, named "**applications**" `mkdir applications`
+- in the "**deployer**" folder, create 2 files **.env** and **start_deployer.sh** `touch .env && touch start_deployer.sh`
 
 ## Install - Step 3
 
