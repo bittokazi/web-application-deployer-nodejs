@@ -174,7 +174,7 @@ export const showApplication = (id, success, error) => {
 export const checkAppName = (payload, success, error) => {
   db.application
     .findAll({
-      where: { email: payload.name },
+      where: { name: payload.name },
       attributes: ["id"],
       include: [{ all: true }],
       order: [["id", "DESC"]],
