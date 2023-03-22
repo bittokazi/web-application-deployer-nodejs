@@ -629,24 +629,23 @@ export const deployApplication = (
             name: result[0].name,
             type: "deployment-start",
           });
-          console.log("Will send notification");
+
           sendNotification(
             "Deployment Started",
             result[0].name + " deployment started",
             "https://prisminfosys.com/images/deployment.png",
             ""
           );
-          console.log("Will send notification 1");
+
           let bash = spawn(
             "cd " +
-              resdeployedFromult[0].location +
+              result[0].location +
               " && bash " +
               result[0].script +
               (args ? " " + args : ""),
             [],
             { shell: true }
           );
-          console.log("Will send notification 2");
           bash.stdout.on("data", function (data) {
             appendLogFile(result[0].name, "log> " + data.toString());
             req.socketIo.emit("chat.message.deploy", {
