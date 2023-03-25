@@ -248,6 +248,9 @@ const _startApplication = async (
         }
       );
       console.log(`GITHUB API REQUEST -> POST /repos/${fullName}/deployments`);
+      payload["repository"] = {
+        full_name: fullName,
+      };
     } catch (error) {}
   }
 
