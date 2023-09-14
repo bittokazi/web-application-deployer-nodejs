@@ -8,17 +8,19 @@ import config from "./../config";
 let baseURL = config.API_BASE_URL_PROTOCOL + config.API_BASE_URL;
 
 const encodedToken = () => {
-  const token = `${AuthStore().getClientCredentials().client_id}:${
-    AuthStore().getClientCredentials().client_secret
-  }`;
-  const bytes = utf8.encode(token);
-  const encoded = base64.encode(bytes);
-  return encoded;
+  try {
+    const token = `${AuthStore().getClientCredentials().client_id}:${
+      AuthStore().getClientCredentials().client_secret
+    }`;
+    const bytes = utf8.encode(token);
+    const encoded = base64.encode(bytes);
+    return encoded;
+  } catch (e) {}
+  return "";
 };
 
 export const ApiCall = () => {
   const subdomain = window.location.hostname.split(".");
-  console.log(subdomain, "fefefefe");
   if (
     config.subdomainMode &&
     subdomain.length == config.subdomainNumber &&
@@ -45,10 +47,9 @@ export const ApiCall = () => {
     authorized: (call, resolve, reject) => {
       let requestConfig = null;
       let http = axios.create({
-        baseURL: `${baseURL}api`,
+        baseURL: `${baseURL}/api`,
         headers: {
           Authorization: `Bearer ${AuthStore().getOauthToken().access_token}`,
-          tenant: `${AuthStore().getTenantKey()}`,
         },
       });
       http.interceptors.request.use(
@@ -69,29 +70,41 @@ export const ApiCall = () => {
             reject({ type: "noServer" });
           }
           if (error.response.status == 401) {
-            let refreshToken = axios.create({
-              baseURL: `${baseURL}`,
-              headers: {
-                Authorization: `Basic ${encodedToken()}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            });
+            let refreshToken = config.SSO_LOGIN
+              ? axios.create({
+                  baseURL: `${baseURL}`,
+                })
+              : axios.create({
+                  baseURL: `${baseURL}`,
+                  headers: {
+                    Authorization: `Basic ${encodedToken()}`,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                });
             refreshToken
               .post(
-                "oauth/token",
-                querystring.stringify({
-                  grant_type: "refresh_token",
-                  refresh_token: `${AuthStore().getOauthToken().refresh_token}`,
-                })
+                config.SSO_LOGIN
+                  ? "/api/login/oauth2/refresh/token"
+                  : "/oauth/token",
+                config.SSO_LOGIN
+                  ? querystring.stringify({
+                      refresh_token: `${
+                        AuthStore().getOauthToken().refresh_token
+                      }`,
+                    })
+                  : querystring.stringify({
+                      grant_type: "refresh_token",
+                      refresh_token: `${
+                        AuthStore().getOauthToken().refresh_token
+                      }`,
+                    })
               )
               .then(function (response) {
                 AuthStore().saveOauthToken(response.data);
                 let httpNew = axios.create({
-                  baseURL: `${baseURL}api`,
+                  baseURL: `${baseURL}/api`,
                 });
-                requestConfig.headers.Authorization = `Bearer ${
-                  AuthStore().getOauthToken().access_token
-                }`;
+                requestConfig.headers.Authorization = `Bearer ${response.data.access_token}`;
                 axios(requestConfig)
                   .then((res) => {
                     console.log("new req", res);

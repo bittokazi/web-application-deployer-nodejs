@@ -41,17 +41,41 @@ const blockedUrl = (path) => {
 export default function DashboardNavbarItem({ item }) {
   return (
     <li>
-      {item.sub != undefined && item.show && !blockedUrl(item.path) && (
-        <Link to={item.path} className={`waves-effect ${isActive(item.path)}`}>
-          <i className={item.icon}></i>&nbsp; {item.title}
-          <span class="fa arrow"></span>
-        </Link>
-      )}
-      {item.sub == undefined && item.show && !blockedUrl(item.path) && (
-        <Link to={item.path} className={`waves-effect ${isActive(item.path)}`}>
-          <i className={item.icon}></i>&nbsp; {item.title}
-        </Link>
-      )}
+      {item.sub != undefined &&
+        item.show &&
+        !blockedUrl(item.path) &&
+        !item.external && (
+          <Link
+            to={item.path}
+            className={`waves-effect ${isActive(item.path)}`}
+          >
+            <i className={item.icon}></i>&nbsp; {item.title}
+            <span class="fa arrow"></span>
+          </Link>
+        )}
+      {item.sub == undefined &&
+        item.show &&
+        !blockedUrl(item.path) &&
+        !item.external && (
+          <Link
+            to={item.path}
+            className={`waves-effect ${isActive(item.path)}`}
+          >
+            <i className={item.icon}></i>&nbsp; {item.title}
+          </Link>
+        )}
+      {item.sub == undefined &&
+        item.show &&
+        !blockedUrl(item.path) &&
+        item.external && (
+          <a
+            href={`${item.link}`}
+            className={`waves-effect ${isActive(item.path)}`}
+            target="_blank"
+          >
+            <i className={item.icon}></i>&nbsp; {item.title}
+          </a>
+        )}
 
       {item.sub != undefined && (
         <ul className={`nav nav-second-level collapse`}>

@@ -5,12 +5,15 @@ import Routes from "./../routes/Routes";
 import Oauth from "./oauth/Oauth";
 import serveStatic from "serve-static";
 import path from "path";
+import cookieParser from "cookie-parser";
+import Config from "../config/Config";
 
 export const Route = (app, socketIoCallback) => {
   app.use(morgan("dev"));
   app.use("/uploads", express.static("uploads"));
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+  app.use(cookieParser());
 
   app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -28,7 +31,9 @@ export const Route = (app, socketIoCallback) => {
     next();
   });
 
-  Oauth(app);
+  if (!Config()._SSO_LOGIN_ENABLED) {
+    Oauth(app);
+  }
 
   Routes(app, socketIoCallback);
 

@@ -3,7 +3,6 @@ import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardFooter from "./DashboardFooter";
 import DashboardNotification from "./DashboardNotification";
-import UserInfoProvider from "./../providers/UserInfoProvider";
 import ChatComponent from "../components/dashboard/chat/ChatComponent";
 
 export default class DashboardLayout extends Component {

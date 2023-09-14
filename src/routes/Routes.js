@@ -12,6 +12,8 @@ import { SocketIoAccacher } from "../middlewares/SocketIoAccacher";
 import { githubDeployController } from "../controllers/GithubDeployController";
 import { dockerDeployController } from "../controllers/DockerDeployController";
 import { gitlabDeployController } from "../controllers/GitlabDeployController";
+import Config from "../config/Config";
+import { SSOTokenInterceptor } from "../engine/oauth/SSOTokenInterceptor";
 
 export const Routes = (app, socketIoCallback) => {
   app.get("/health", HelloWorld);
@@ -32,26 +34,26 @@ export const Routes = (app, socketIoCallback) => {
   );
   app.use(
     "/api/users",
-    app.oauth.authenticate(),
-    TenantIdentifierInterceptor,
+    Config()._SSO_LOGIN_ENABLED
+      ? SSOTokenInterceptor
+      : app.oauth.authenticate(),
     UserInfo,
-    TenantUserRole,
     userRoutes
   );
   app.use(
     "/api/fcm",
-    app.oauth.authenticate(),
-    TenantIdentifierInterceptor,
+    Config()._SSO_LOGIN_ENABLED
+      ? SSOTokenInterceptor
+      : app.oauth.authenticate(),
     UserInfo,
-    TenantUserRole,
     fcmRoutes
   );
   app.use(
     "/api/applications",
-    app.oauth.authenticate(),
-    TenantIdentifierInterceptor,
+    Config()._SSO_LOGIN_ENABLED
+      ? SSOTokenInterceptor
+      : app.oauth.authenticate(),
     UserInfo,
-    TenantUserRole,
     SocketIoAccacher(socketIoCallback),
     applicationRoutes
   );

@@ -16,6 +16,16 @@ export const Config = () => {
     _GITHUB_TOKEN: process.env._GITHUB_TOKEN,
     _GITLAB_USERNAME: process.env._GITLAB_USERNAME,
     _GITLAB_TOKEN: process.env._GITLAB_TOKEN,
+    _SSO_DOMAIN: process.env._SSO_DOMAIN,
+    _SSO_CLIENT_ID: process.env._SSO_CLIENT_ID,
+    _SSO_CLIENT_SECRET: process.env._SSO_CLIENT_SECRET,
+    _SSO_CLIENT_SCOPE: process.env._SSO_CLIENT_SCOPE,
+    _SSO_CLIENT_REDIRECT_URL: process.env._SSO_CLIENT_REDIRECT_URL,
+    _SSO_LOGIN_ENABLED: process.env._SSO_LOGIN_ENABLED
+      ? process.env._SSO_LOGIN_ENABLED.toLowerCase() == "true"
+        ? true
+        : false
+      : false,
   };
 };
 

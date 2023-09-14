@@ -4,6 +4,7 @@ const dev = {
   CHAT_SERVER_URL: "http://localhost:8081",
   DOCKER_ENV: false,
   SHOW_UPDATE: true,
+  SSO_LOGIN: false,
 };
 
 const generic = {
@@ -12,6 +13,16 @@ const generic = {
   CHAT_SERVER_URL: "/",
   DOCKER_ENV: false,
   SHOW_UPDATE: false,
+  SSO_LOGIN: false,
+};
+
+const sso = {
+  API_BASE_URL: "/",
+  API_BASE_URL_PROTOCOL: "",
+  CHAT_SERVER_URL: "/",
+  DOCKER_ENV: false,
+  SHOW_UPDATE: false,
+  SSO_LOGIN: true,
 };
 
 const docker_env = {
@@ -20,12 +31,15 @@ const docker_env = {
   CHAT_SERVER_URL: "/",
   DOCKER_ENV: true,
   SHOW_UPDATE: false,
+  SSO_LOGIN: false,
 };
 
 let config = {};
 
 if (process.env.REACT_APP_STAGE === "generic") {
   config = generic;
+} else if (process.env.REACT_APP_STAGE === "sso") {
+  config = sso;
 } else if (process.env.REACT_APP_STAGE === "docker_build") {
   config = docker_env;
 } else {

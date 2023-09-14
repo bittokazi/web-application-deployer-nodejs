@@ -5,6 +5,7 @@ import AuthStore from "./../../services/AuthStore";
 import querystring from "querystring";
 import ClipLoader from "react-spinners/ClipLoader";
 import "./login.css";
+import config from "../../config";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -44,6 +45,9 @@ export default function Login() {
         },
         (reject) => {
           setTimeout(() => {
+            if (reject.response.status == 403) {
+              setErrorMessage("Permission denied: 403");
+            }
             setLoggedInCheck(false);
           }, 1000);
         }
@@ -120,6 +124,13 @@ export default function Login() {
     }
   };
 
+  const loginSSO = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    window.location.href =
+      config.API_BASE_URL_PROTOCOL + config.API_BASE_URL + "/api/login/sso";
+  };
+
   return (
     <>
       <div class="bg-animated"></div>
@@ -135,7 +146,23 @@ export default function Login() {
               </div>
             )}
 
-            {!loggedInCheck && !changePassword && (
+            {!loggedInCheck && !changePassword && config.SSO_LOGIN && (
+              <div class="login-form">
+                {errorMessage != "" && (
+                  <div style={{ color: "red" }}>{errorMessage}</div>
+                )}
+                <button
+                  class="btn btn-primary btn-large btn-block"
+                  disabled={loading}
+                  onClick={loginSSO}
+                >
+                  Login with SSO
+                </button>
+                {/* <a class="login-link" href="#">Lost your password?</a> */}
+              </div>
+            )}
+
+            {!loggedInCheck && !changePassword && !config.SSO_LOGIN && (
               <div class="login-form">
                 <div class="control-group">
                   <input
@@ -179,7 +206,7 @@ export default function Login() {
               </div>
             )}
 
-            {!loggedInCheck && changePassword && (
+            {!loggedInCheck && changePassword && !config.SSO_LOGIN && (
               <div class="login-form">
                 <div class="control-group">
                   <input

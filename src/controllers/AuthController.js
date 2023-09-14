@@ -1,5 +1,9 @@
-import { checkUserGetOauthCredentials } from "./../service/AuthService";
-import { addUser } from "./../service/UserService";
+import {
+  authorizeUserService,
+  checkUserGetOauthCredentials,
+  refreshTokenService,
+  ssoLoginCall,
+} from "./../service/AuthService";
 import { subscribeTopic, unSubscribeTopic } from "../service/FirebaseService";
 
 export const login = (req, res, next) => {
@@ -40,4 +44,16 @@ export const unSubscribeFcm = (req, res, next) => {
     .catch((error) => {
       return res.status(500).json(error);
     });
+};
+
+export const ssoLogin = (req, res, next) => {
+  ssoLoginCall(res);
+};
+
+export const authorizeUserController = (req, res, next) => {
+  authorizeUserService(req, res);
+};
+
+export const refreshTokenController = (req, res, next) => {
+  refreshTokenService(req, res);
 };

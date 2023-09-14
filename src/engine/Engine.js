@@ -18,7 +18,6 @@ export default class Engine {
       .then(() => {
         SequalizeSeed()
           .then(() => {
-            SequalizeSeed;
             Route(this.app, socketIoCallback);
             this.app = SocketEngine(this.app, (socketIo) => {
               socketIoCallback = socketIoCallback["socket"] = socketIo;
