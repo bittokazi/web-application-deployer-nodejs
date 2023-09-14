@@ -9,17 +9,17 @@ const dev = {
 
 const generic = {
   API_BASE_URL: "infra.bittokazi.com",
-  API_BASE_URL_PROTOCOL: "",
-  CHAT_SERVER_URL: "/",
+  API_BASE_URL_PROTOCOL: "https://",
+  CHAT_SERVER_URL: "https://infra.bittokazi.com",
   DOCKER_ENV: false,
   SHOW_UPDATE: false,
   SSO_LOGIN: false,
 };
 
 const sso = {
-  API_BASE_URL: "/",
-  API_BASE_URL_PROTOCOL: "",
-  CHAT_SERVER_URL: "/",
+  API_BASE_URL: "infra.bittokazi.com",
+  API_BASE_URL_PROTOCOL: "https://",
+  CHAT_SERVER_URL: "https://infra.bittokazi.com",
   DOCKER_ENV: false,
   SHOW_UPDATE: false,
   SSO_LOGIN: true,
