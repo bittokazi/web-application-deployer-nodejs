@@ -8,7 +8,7 @@ const dev = {
 };
 
 const generic = {
-  API_BASE_URL: "/",
+  API_BASE_URL: "infra.bittokazi.com",
   API_BASE_URL_PROTOCOL: "",
   CHAT_SERVER_URL: "/",
   DOCKER_ENV: false,
