@@ -106,14 +106,7 @@ export const UserAccess = (role, req) => {
           breadcrumb: true,
           icon: `fa fa-user-circle-o`,
           external: true,
-          link: Config()._SSO_DOMAIN + "/app",
-        },
-        {
-          path: `/dashboard/update`,
-          title: `Update`,
-          show: true,
-          breadcrumb: true,
-          icon: `glyphicon glyphicon-fire`,
+          link: Config()._SSO_DOMAIN + "/oauth2/login",
         },
         {
           path: `/dashboard/logout`,
