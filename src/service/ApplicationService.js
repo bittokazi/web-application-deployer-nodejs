@@ -940,9 +940,9 @@ export const gitlabDeployApplication = (req, success, error) => {
                   "gitlab"
                 );
               }
-            } else error(err);
-          } else error(err);
-        } else error(err);
+            } else error({ message: "Error REF" });
+          } else error({ message: "Error Token" });
+        } else error({ message: "MIssing Token" });
       })
       .catch((err) => {
         error(err);

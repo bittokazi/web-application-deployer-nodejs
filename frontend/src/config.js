@@ -4,7 +4,7 @@ const dev = {
   CHAT_SERVER_URL: "http://localhost:8081",
   DOCKER_ENV: false,
   SHOW_UPDATE: true,
-  SSO_LOGIN: false,
+  SSO_LOGIN: true,
 };
 
 const generic = {
