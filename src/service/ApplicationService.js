@@ -885,8 +885,8 @@ export const gitlabDeployApplication = (req, success, error) => {
           req.header("X-Gitlab-Token") != "null" &&
           req.header("X-Gitlab-Token") != ""
         ) {
-          if (req.headers["X-Gitlab-Token"] === result[0].secret) {
-            if (req.body.ref === "refs/heads/" + result[0].branch) {
+          if (req.header("X-Gitlab-Token") == result[0].secret) {
+            if (req.body.ref == "refs/heads/" + result[0].branch) {
               sendNotification(
                 "Gitlab auto Deployment",
                 result[0].name + " gitlab auto deployment started",
