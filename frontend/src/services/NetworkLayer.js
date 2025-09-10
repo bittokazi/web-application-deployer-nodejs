@@ -37,7 +37,7 @@ export const ApiCall = () => {
     },
     token: () => {
       return axios.create({
-        baseURL: `${baseURL}`,
+        baseURL: baseURL,
         headers: {
           Authorization: `Basic ${encodedToken()}`,
           "Content-Type": "application/x-www-form-urlencoded",
@@ -47,7 +47,7 @@ export const ApiCall = () => {
     authorized: (call, resolve, reject) => {
       let requestConfig = null;
       let http = axios.create({
-        baseURL: `${baseURL}/api`,
+        baseURL: baseURL+ "/api",
         headers: {
           Authorization: `Bearer ${AuthStore().getOauthToken().access_token}`,
         },
