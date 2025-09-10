@@ -18,7 +18,7 @@ export default class ApplicationList extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications",
+        url: "/api/applications",
       },
       (response) => {
         this.setState({ applications: response.data });
@@ -66,7 +66,7 @@ export default class ApplicationList extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + id,
+        url: "/api/applications/" + id,
       },
       (response) => {
         // this.setState({ applications: response.data });

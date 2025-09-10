@@ -33,7 +33,7 @@ export default class AddApplication extends Component {
     ApiCall().authorized(
       {
         method: "PUT",
-        url: "/applications/" + this.props.match.params.id,
+        url: "/api/applications/" + this.props.match.params.id,
         data: {
           name: this.state.name,
           secret: this.state.secret,
@@ -63,7 +63,7 @@ export default class AddApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + this.props.match.params.id,
+        url: "/api/applications/" + this.props.match.params.id,
       },
       (response) => {
         this.setState({

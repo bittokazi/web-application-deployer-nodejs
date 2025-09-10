@@ -35,7 +35,7 @@ export default class AddApplication extends Component {
     ApiCall().authorized(
       {
         method: "POST",
-        url: "/applications",
+        url: "/api/applications",
         data: {
           name: this.state.name,
           secret: this.state.secret,

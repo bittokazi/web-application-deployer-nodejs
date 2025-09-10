@@ -30,7 +30,7 @@ export default class Update extends Component {
       ApiCall().authorized(
         {
           method: "GET",
-          url: "/applications/self/deploy/app",
+          url: "/api/applications/self/deploy/app",
         },
         (response) => {
           setInterval(() => {

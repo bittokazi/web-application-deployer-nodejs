@@ -28,7 +28,7 @@ export default class ShowApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + this.props.match.params.id,
+        url: "/api/applications/" + this.props.match.params.id,
       },
       (response) => {
         this.setState({
@@ -45,7 +45,7 @@ export default class ShowApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + this.props.match.params.id + "/log",
+        url: "/api/applications/" + this.props.match.params.id + "/log",
       },
       (response) => {
         this.setState({
@@ -89,7 +89,7 @@ export default class ShowApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + name + "/deployments",
+        url: "/api/applications/" + name + "/deployments",
       },
       (response) => {
         this.setState({
@@ -144,7 +144,7 @@ export default class ShowApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + this.props.match.params.id + "/deploy",
+        url: "/api/applications/" + this.props.match.params.id + "/deploy",
       },
       (response) => {},
       (error) => {
@@ -157,7 +157,7 @@ export default class ShowApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + this.props.match.params.id + "/deploy",
+        url: "/api/applications/" + this.props.match.params.id + "/deploy",
       },
       (response) => {},
       (error) => {
@@ -170,7 +170,7 @@ export default class ShowApplication extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/applications/" + this.props.match.params.id + "/deploy/stop",
+        url: "/api/applications/" + this.props.match.params.id + "/deploy/stop",
       },
       (response) => {},
       (error) => {

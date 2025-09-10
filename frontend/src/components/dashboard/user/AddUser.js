@@ -33,7 +33,7 @@ export default class AddUser extends Component {
     ApiCall().authorized(
       {
         method: "POST",
-        url: "/users",
+        url: "/api/users",
         data: {
           username: this.state.username,
           email: this.state.email,

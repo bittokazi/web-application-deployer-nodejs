@@ -35,7 +35,7 @@ export default class Profile extends Component {
     ApiCall().authorized(
       {
         method: "PUT",
-        url: "/users/" + this.state.user.id,
+        url: "/api/users/" + this.state.user.id,
         data: {
           username: this.state.username,
           email: this.state.email,
@@ -75,7 +75,7 @@ export default class Profile extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/users/whoami",
+        url: "/api/users/whoami",
       },
       (response) => {
         this.setState({

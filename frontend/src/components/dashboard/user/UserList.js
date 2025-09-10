@@ -18,7 +18,7 @@ export default class UserList extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/users",
+        url: "/api/users",
       },
       (response) => {
         this.setState({ users: response.data });

@@ -34,7 +34,7 @@ export default class UpdateUser extends Component {
     ApiCall().authorized(
       {
         method: "PUT",
-        url: "/users/" + this.props.match.params.id,
+        url: "/api/users/" + this.props.match.params.id,
         data: {
           username: this.state.username,
           email: this.state.email,
@@ -75,7 +75,7 @@ export default class UpdateUser extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/users/" + this.props.match.params.id,
+        url: "/api/users/" + this.props.match.params.id,
       },
       (response) => {
         console.log(response);

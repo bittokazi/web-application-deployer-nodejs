@@ -58,7 +58,7 @@ export class AuthComponent extends Component {
     ApiCall().authorized(
       {
         method: "GET",
-        url: "/users/whoami",
+        url: "/api/users/whoami",
       },
       (resolve) => {
         if (resolve.data.changePassword) {
