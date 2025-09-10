@@ -27,7 +27,7 @@ export default function Login() {
       ApiCall().authorized(
         {
           method: "GET",
-          url: "/users/whoami",
+          url: "/api/users/whoami",
         },
         (resolve) => {
           if (resolve.status == 200) {
@@ -100,7 +100,7 @@ export default function Login() {
       ApiCall().authorized(
         {
           method: "PUT",
-          url: "/users/change-password",
+          url: "/api/users/change-password",
           data: {
             password,
           },
