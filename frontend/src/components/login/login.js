@@ -127,8 +127,7 @@ export default function Login() {
   const loginSSO = (event) => {
     event.preventDefault();
     setLoading(true);
-    window.location.href =
-      config.API_BASE_URL_PROTOCOL + config.API_BASE_URL + "/api/login/sso";
+    window.location.href = window.location.href + "api/login/sso";
   };
 
   return (
