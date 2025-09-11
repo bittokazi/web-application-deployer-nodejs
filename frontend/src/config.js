@@ -16,6 +16,15 @@ const generic = {
   SSO_LOGIN: false,
 };
 
+const generic_sso = {
+  API_BASE_URL: "/",
+  API_BASE_URL_PROTOCOL: "",
+  CHAT_SERVER_URL: "/",
+  DOCKER_ENV: false,
+  SHOW_UPDATE: false,
+  SSO_LOGIN: true,
+};
+
 const sso = {
   API_BASE_URL: "infra.bittokazi.com",
   API_BASE_URL_PROTOCOL: "https://",
@@ -38,6 +47,8 @@ let config = {};
 
 if (process.env.REACT_APP_STAGE === "generic") {
   config = generic;
+} else if (process.env.REACT_APP_STAGE === "generic_sso") {
+  config = generic_sso;
 } else if (process.env.REACT_APP_STAGE === "sso") {
   config = sso;
 } else if (process.env.REACT_APP_STAGE === "docker_build") {

@@ -30,7 +30,8 @@
     "build:dev": "REACT_APP_STAGE=dev npm run build",
     "build:generic": "REACT_APP_STAGE=generic node --max_old_space_size=256 ./node_modules/.bin/react-scripts build",
     "build:docker-build": "REACT_APP_STAGE=docker_build npm run build",
-    "build:sso": "REACT_APP_STAGE=sso node --max_old_space_size=256 ./node_modules/.bin/react-scripts build"
+    "build:sso": "REACT_APP_STAGE=sso node --max_old_space_size=256 ./node_modules/.bin/react-scripts build",
+    "build:generic_sso": "REACT_APP_STAGE=generic_sso node --max_old_space_size=256 ./node_modules/.bin/react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
